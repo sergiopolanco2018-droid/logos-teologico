@@ -7,7 +7,4 @@ Luego abre en tu navegador:
 http://localhost:8080/theological-app.html
 ```
 
-Esto simula un servidor real y la API funcionará correctamente.
-
----
 
