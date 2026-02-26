@@ -1,0 +1,2751 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Logos — Consultas Teológicas</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --parchment: #f5ead0;
+    --parchment-dark: #e8d5a3;
+    --gold: #c8962a;
+    --gold-light: #e8b84b;
+    --gold-dim: #8a6518;
+    --crimson: #8b1a1a;
+    --crimson-light: #c42b2b;
+    --olive: #3d5229;
+    --olive-light: #5a7a3a;
+    --shadow: rgba(26,18,8,0.35);
+    --text: #2c1e0a;
+    --muted: #6b5535;
+    --border: rgba(200,150,42,0.3);
+    --glow: rgba(200,150,42,0.15);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'EB Garamond', serif;
+    background: var(--ink);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Parchment texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.5;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    text-align: center;
+    padding: 3rem 2rem 2rem;
+    background: linear-gradient(180deg, #0d0a04 0%, var(--ink) 100%);
+    border-bottom: 1px solid var(--gold-dim);
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(200,150,42,0.12) 0%, transparent 70%);
+  }
+  .logo-emblem {
+    font-size: 3rem;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    filter: drop-shadow(0 0 20px rgba(200,150,42,0.5));
+  }
+  header h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    color: var(--gold-light);
+    letter-spacing: 0.08em;
+    text-shadow: 0 0 30px rgba(200,150,42,0.4), 0 2px 4px rgba(0,0,0,0.6);
+    position: relative;
+  }
+  header p.tagline {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    color: var(--gold-dim);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-top: 0.5rem;
+    position: relative;
+  }
+  .header-rule {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.5rem auto 0;
+    max-width: 500px;
+    position: relative;
+  }
+  .header-rule::before, .header-rule::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  }
+  .header-rule span {
+    color: var(--gold);
+    font-size: 1.2rem;
+  }
+
+  /* ── EDITORIAL TEAM ── */
+  .editorial-strip {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+    padding: 0.55rem 2rem;
+    background: linear-gradient(90deg, #0d0a04 0%, #1a1208 40%, #1a1208 60%, #0d0a04 100%);
+    border-bottom: 1px solid rgba(200,150,42,0.15);
+    overflow: hidden;
+  }
+  .editorial-strip::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 100% at 50% 50%, rgba(200,150,42,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .editorial-divider {
+    width: 1px;
+    height: 28px;
+    background: linear-gradient(180deg, transparent, var(--gold-dim), transparent);
+    margin: 0 1.4rem;
+    flex-shrink: 0;
+  }
+  .editorial-person {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.08rem;
+    position: relative;
+  }
+  .editorial-role {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    line-height: 1;
+  }
+  .editorial-name {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.88rem;
+    color: var(--parchment-dark);
+    font-style: italic;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+  .editorial-name strong {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--parchment);
+  }
+  .editorial-ornament {
+    font-size: 0.75rem;
+    color: var(--gold-dim);
+    opacity: 0.6;
+    margin: 0 0.5rem;
+    align-self: center;
+    flex-shrink: 0;
+  }
+  @media (max-width: 768px) {
+    .editorial-strip { gap: 0.4rem; padding: 0.5rem 0.8rem; justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .editorial-strip::-webkit-scrollbar { display: none; }
+    .editorial-divider { display: none; }
+    .editorial-ornament { display: none; }
+    .editorial-person { flex-direction: column; align-items: flex-start; gap: 0; flex-shrink: 0; border-right: 1px solid rgba(200,150,42,0.2); padding-right: 1rem; margin-right: 0.2rem; }
+    .editorial-person:last-child { border-right: none; }
+    .editorial-name { font-size: 0.78rem; white-space: nowrap; }
+    .editorial-role { font-size: 0.48rem; }
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .app-container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    grid-template-rows: 1fr;
+    height: calc(100vh - 230px);
+    gap: 0;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    background: linear-gradient(180deg, #12100a 0%, #0e0c07 100%);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .sidebar-section {
+    padding: 1.2rem 1.2rem 0.8rem;
+    border-bottom: 1px solid rgba(200,150,42,0.12);
+  }
+  .sidebar-section h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 0.8rem;
+  }
+
+  /* Sources */
+  .source-list { display: flex; flex-direction: column; gap: 0.4rem; }
+  .source-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.7rem;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: rgba(200,150,42,0.04);
+  }
+  .source-item:hover { border-color: var(--border); background: rgba(200,150,42,0.08); }
+  .source-item.active { border-color: var(--gold-dim); background: rgba(200,150,42,0.12); }
+  .source-item input[type=checkbox] {
+    accent-color: var(--gold);
+    width: 14px; height: 14px;
+  }
+  .source-icon { font-size: 1rem; width: 20px; text-align: center; }
+  .source-name { font-size: 0.8rem; color: var(--parchment-dark); font-family: 'Cinzel', serif; flex: 1; }
+  .source-badge {
+    font-size: 0.6rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 2px;
+    background: var(--gold-dim);
+    color: var(--parchment);
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.05em;
+  }
+
+  /* Language toggle */
+  .lang-pills {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+  .lang-pill {
+    padding: 0.3rem 0.8rem;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'EB Garamond', serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .lang-pill:hover { border-color: var(--gold-dim); color: var(--gold-light); }
+  .lang-pill.active { background: var(--gold-dim); border-color: var(--gold-dim); color: var(--parchment); }
+
+  /* URL References */
+  .url-refs { display: flex; flex-direction: column; gap: 0.5rem; flex: 1; overflow: hidden; }
+  .url-input-row {
+    display: flex;
+    gap: 0.4rem;
+  }
+  .url-input {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 0.35rem 0.6rem;
+    color: var(--parchment-dark);
+    font-family: 'EB Garamond', serif;
+    font-size: 0.8rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .url-input:focus { border-color: var(--gold-dim); }
+  .url-input::placeholder { color: var(--muted); }
+  .btn-add-url {
+    background: var(--gold-dim);
+    border: none;
+    border-radius: 3px;
+    color: var(--parchment);
+    padding: 0.35rem 0.7rem;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s;
+  }
+  .btn-add-url:hover { background: var(--gold); }
+
+  .url-list {
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    max-height: 160px;
+  }
+  .url-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.6rem;
+    background: rgba(200,150,42,0.06);
+    border: 1px solid rgba(200,150,42,0.15);
+    border-radius: 3px;
+    font-size: 0.75rem;
+    color: var(--muted);
+    overflow: hidden;
+  }
+  .url-tag .url-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .url-tag .url-status { width: 8px; height: 8px; border-radius: 50%; background: var(--olive-light); flex-shrink: 0; }
+  .url-tag .url-status.loading { background: var(--gold); animation: pulse 1s infinite; }
+  .url-tag .url-status.error { background: var(--crimson); }
+  .btn-remove-url { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.9rem; padding: 0; flex-shrink: 0; }
+  .btn-remove-url:hover { color: var(--crimson-light); }
+
+  /* History */
+  .history-list {
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    max-height: 160px;
+    padding: 0.5rem 1.2rem;
+  }
+  .history-item {
+    padding: 0.4rem 0.6rem;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: var(--muted);
+    transition: all 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .history-item:hover { border-color: var(--border); color: var(--parchment-dark); background: rgba(200,150,42,0.05); }
+
+  /* ── MAIN CHAT AREA ── */
+  .main-area {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, #16120a 0%, #12100b 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .main-area::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(200,150,42,0.04) 39px, rgba(200,150,42,0.04) 40px);
+    pointer-events: none;
+  }
+
+  /* Chat window */
+  .chat-window {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: relative;
+    scroll-behavior: smooth;
+  }
+
+  .chat-window::-webkit-scrollbar { width: 4px; }
+  .chat-window::-webkit-scrollbar-track { background: transparent; }
+  .chat-window::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+
+  /* Welcome screen */
+  .welcome-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    text-align: center;
+    gap: 1.5rem;
+    padding: 2rem;
+    opacity: 1;
+    transition: opacity 0.4s;
+  }
+  .welcome-screen.hidden { opacity: 0; pointer-events: none; display: none; }
+  .welcome-icon { font-size: 4rem; filter: drop-shadow(0 0 30px rgba(200,150,42,0.4)); }
+  .welcome-screen h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    color: var(--gold-light);
+    letter-spacing: 0.05em;
+  }
+  .welcome-screen p {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 500px;
+    line-height: 1.7;
+    font-style: italic;
+  }
+  .quick-queries {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    justify-content: center;
+    max-width: 600px;
+  }
+  .quick-query {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: rgba(200,150,42,0.06);
+    color: var(--parchment-dark);
+    font-family: 'EB Garamond', serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .quick-query:hover { border-color: var(--gold-dim); background: rgba(200,150,42,0.12); color: var(--gold-light); }
+
+  /* Messages */
+  .message {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    max-width: 85%;
+    animation: slideIn 0.3s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .message.user { align-self: flex-end; align-items: flex-end; }
+  .message.assistant { align-self: flex-start; align-items: flex-start; }
+
+  .message-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0 0.5rem;
+  }
+  .message.user .message-label { color: var(--gold-dim); }
+
+  .message-bubble {
+    padding: 1rem 1.3rem;
+    border-radius: 2px;
+    line-height: 1.75;
+    font-size: 1.05rem;
+    position: relative;
+  }
+  .message.user .message-bubble {
+    background: linear-gradient(135deg, rgba(139,26,26,0.2), rgba(139,26,26,0.1));
+    border: 1px solid rgba(139,26,26,0.3);
+    color: var(--parchment);
+  }
+  .message.assistant .message-bubble {
+    background: linear-gradient(135deg, rgba(200,150,42,0.08), rgba(200,150,42,0.04));
+    border: 1px solid var(--border);
+    color: var(--parchment-dark);
+  }
+
+  /* Markdown-like styling inside bubbles */
+  .message-bubble h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: var(--gold-light);
+    margin: 0.8rem 0 0.4rem;
+    letter-spacing: 0.05em;
+  }
+  .message-bubble strong { color: var(--gold-light); font-weight: 600; }
+  .message-bubble em { color: var(--parchment); }
+  .message-bubble blockquote {
+    border-left: 3px solid var(--gold-dim);
+    padding: 0.3rem 0 0.3rem 1rem;
+    margin: 0.6rem 0;
+    color: var(--muted);
+    font-style: italic;
+  }
+  .message-bubble .greek-hebrew {
+    font-size: 1.2em;
+    color: var(--gold-light);
+    font-style: italic;
+    letter-spacing: 0.05em;
+  }
+  .message-bubble .reference {
+    display: inline-block;
+    background: rgba(61,82,41,0.3);
+    border: 1px solid rgba(90,122,58,0.4);
+    border-radius: 2px;
+    padding: 0.05rem 0.4rem;
+    font-size: 0.9em;
+    color: var(--olive-light);
+    margin: 0 0.1rem;
+  }
+  .message-bubble hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0.8rem 0;
+  }
+  .message-bubble ul { padding-left: 1.5rem; }
+  .message-bubble li { margin: 0.3rem 0; }
+
+  /* Typing indicator */
+  .typing-indicator {
+    display: none;
+    align-self: flex-start;
+    padding: 0.8rem 1.2rem;
+    background: rgba(200,150,42,0.06);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+  }
+  .typing-indicator.visible { display: flex; gap: 0.4rem; align-items: center; }
+  .typing-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--gold-dim);
+    animation: typingDot 1.2s infinite;
+  }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typingDot {
+    0%, 60%, 100% { opacity: 0.3; transform: scale(0.8); }
+    30% { opacity: 1; transform: scale(1); }
+  }
+
+  /* ── INPUT AREA ── */
+  .input-area {
+    padding: 1rem 2rem 1.5rem;
+    border-top: 1px solid var(--border);
+    background: linear-gradient(0deg, rgba(10,8,4,0.8) 0%, transparent 100%);
+    position: relative;
+  }
+
+  .input-context {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .context-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.6rem;
+    background: rgba(200,150,42,0.08);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.05em;
+  }
+  .context-chip .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--olive-light); }
+
+  .input-row {
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-end;
+  }
+  .query-input {
+    flex: 1;
+    background: rgba(245,234,208,0.05);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 0.8rem 1rem;
+    color: var(--parchment);
+    font-family: 'EB Garamond', serif;
+    font-size: 1.05rem;
+    outline: none;
+    resize: none;
+    min-height: 50px;
+    max-height: 150px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    line-height: 1.5;
+  }
+  .query-input:focus {
+    border-color: var(--gold-dim);
+    box-shadow: 0 0 0 2px rgba(200,150,42,0.08);
+  }
+  .query-input::placeholder { color: var(--muted); font-style: italic; }
+
+  .btn-send {
+    background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+    border: none;
+    border-radius: 3px;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+  .btn-send:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(200,150,42,0.3); }
+  .btn-send:active { transform: translateY(0); }
+  .btn-send:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .input-hint {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 0.4rem;
+    text-align: center;
+    font-style: italic;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(200,150,42,0.3); border-radius: 2px; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* ── RESPONSIVE ── */
+  /* ══════════════════════════════════════
+     SISTEMA MONETARIO — PAYWALL
+  ══════════════════════════════════════ */
+
+  /* ── Access gate overlay ── */
+  #accessGate {
+    position: fixed;
+    inset: 0;
+    z-index: 5000;
+    background: radial-gradient(ellipse at 50% 30%, #1e1508 0%, #0a0804 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    overflow-y: auto;
+  }
+  #accessGate.hidden { display: none; }
+
+  .gate-card {
+    background: linear-gradient(160deg, #1c1508 0%, #12100a 100%);
+    border: 1px solid var(--gold-dim);
+    border-radius: 6px;
+    max-width: 480px;
+    width: 100%;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 0 60px rgba(200,150,42,0.12), 0 20px 60px rgba(0,0,0,0.7);
+    position: relative;
+    overflow: hidden;
+  }
+  .gate-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
+  }
+  .gate-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 40% at 50% 0%, rgba(200,150,42,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .gate-emblem {
+    text-align: center;
+    font-size: 3rem;
+    filter: drop-shadow(0 0 20px rgba(200,150,42,0.5));
+    margin-bottom: 0.5rem;
+  }
+  .gate-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.6rem;
+    color: var(--gold-light);
+    text-align: center;
+    letter-spacing: 0.06em;
+    text-shadow: 0 0 20px rgba(200,150,42,0.4);
+    margin-bottom: 0.3rem;
+  }
+  .gate-subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    text-align: center;
+    margin-bottom: 1.8rem;
+  }
+
+  /* ── Plan cards ── */
+  .plan-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+  }
+  .plan-card {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: rgba(200,150,42,0.03);
+    position: relative;
+    text-align: center;
+  }
+  .plan-card:hover { border-color: var(--gold-dim); background: rgba(200,150,42,0.07); }
+  .plan-card.selected {
+    border-color: var(--gold);
+    background: rgba(200,150,42,0.12);
+    box-shadow: 0 0 16px rgba(200,150,42,0.2);
+  }
+  .plan-card .plan-badge {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--gold-dim);
+    color: var(--parchment);
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    padding: 0.15rem 0.6rem;
+    border-radius: 2px;
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+  .plan-card .plan-badge.free { background: var(--olive); }
+  .plan-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    color: var(--parchment-dark);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .plan-price {
+    font-family: 'EB Garamond', serif;
+    font-size: 1.6rem;
+    color: var(--gold-light);
+    font-weight: 600;
+    line-height: 1;
+  }
+  .plan-price span {
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .plan-desc {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 0.4rem;
+    font-style: italic;
+    line-height: 1.3;
+  }
+
+  /* ── Form ── */
+  .gate-form { display: flex; flex-direction: column; gap: 0.7rem; }
+  .gate-input {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 0.7rem 0.9rem;
+    color: var(--parchment);
+    font-family: 'EB Garamond', serif;
+    font-size: 1rem;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.2s;
+  }
+  .gate-input:focus { border-color: var(--gold-dim); }
+  .gate-input::placeholder { color: var(--muted); font-style: italic; }
+
+  .gate-btn {
+    width: 100%;
+    padding: 0.85rem;
+    border: none;
+    border-radius: 3px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 0.3rem;
+  }
+  .gate-btn.primary {
+    background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+    color: var(--ink);
+    font-weight: 700;
+    box-shadow: 0 4px 16px rgba(200,150,42,0.3);
+  }
+  .gate-btn.primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(200,150,42,0.45); }
+  .gate-btn.free-trial {
+    background: transparent;
+    border: 1px solid var(--olive-light);
+    color: var(--olive-light);
+  }
+  .gate-btn.free-trial:hover { background: rgba(90,122,58,0.12); }
+
+  .gate-divider {
+    display: flex; align-items: center; gap: 0.8rem;
+    margin: 0.3rem 0;
+  }
+  .gate-divider::before, .gate-divider::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+  .gate-divider span { font-size: 0.7rem; color: var(--muted); font-family: 'Cinzel', serif; letter-spacing: 0.1em; }
+
+  /* ── Payment step ── */
+  #paymentStep { display: none; }
+  #paymentStep.visible { display: block; }
+  #planStep { display: block; }
+  #planStep.hidden { display: none; }
+
+  .payment-info {
+    background: rgba(200,150,42,0.06);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  .mp-alias {
+    font-family: 'Cinzel', serif;
+    font-size: 1.2rem;
+    color: var(--gold-light);
+    letter-spacing: 0.08em;
+    margin: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+  }
+  .copy-alias-btn {
+    background: rgba(200,150,42,0.15);
+    border: 1px solid var(--gold-dim);
+    border-radius: 3px;
+    color: var(--gold);
+    font-size: 0.8rem;
+    padding: 0.2rem 0.6rem;
+    cursor: pointer;
+    font-family: 'Cinzel', serif;
+    transition: all 0.2s;
+  }
+  .copy-alias-btn:hover { background: rgba(200,150,42,0.25); }
+  .copy-alias-btn.copied { background: rgba(90,122,58,0.3); border-color: var(--olive-light); color: var(--olive-light); }
+
+  .payment-amount {
+    font-size: 2rem;
+    font-family: 'EB Garamond', serif;
+    color: var(--gold-light);
+    font-weight: 600;
+  }
+  .payment-amount small { font-size: 1rem; color: var(--muted); }
+  .payment-steps-list {
+    list-style: none;
+    margin: 0.8rem 0;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .payment-steps-list li {
+    font-size: 0.88rem;
+    color: var(--parchment-dark);
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    line-height: 1.4;
+  }
+  .payment-steps-list li .step-num {
+    background: var(--gold-dim);
+    color: var(--ink);
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-family: 'Cinzel', serif;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .wa-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 0.85rem;
+    background: linear-gradient(135deg, #1a7a40, #25a85a);
+    border: none;
+    border-radius: 3px;
+    color: #fff;
+    font-family: 'Cinzel', serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    margin-top: 0.5rem;
+  }
+  .wa-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,168,90,0.4); }
+
+  .gate-back-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.3rem;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .gate-back-btn:hover { color: var(--parchment-dark); }
+
+  /* ── Trial countdown banner ── */
+  #trialBanner {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 4000;
+    background: linear-gradient(90deg, #0d0a04, #1c1508, #0d0a04);
+    border-bottom: 1px solid var(--gold-dim);
+    padding: 0.45rem 1rem;
+    text-align: center;
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    color: var(--gold-dim);
+    animation: bannerSlide 0.4s ease;
+  }
+  #trialBanner.visible { display: block; }
+  #trialBanner strong { color: var(--gold-light); }
+  #trialBanner .upgrade-link {
+    margin-left: 0.8rem;
+    color: var(--gold);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  @keyframes bannerSlide {
+    from { transform: translateY(-100%); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+  }
+
+  /* ── Expired overlay ── */
+  #expiredOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 4500;
+    background: rgba(10,8,4,0.92);
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+  #expiredOverlay.visible { display: flex; }
+  .expired-card {
+    background: linear-gradient(160deg, #1c1508, #12100a);
+    border: 1px solid var(--crimson);
+    border-radius: 6px;
+    max-width: 400px;
+    width: 100%;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(139,26,26,0.25);
+  }
+  .expired-icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
+  .expired-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    color: var(--parchment);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.08em;
+  }
+  .expired-text { font-size: 0.95rem; color: var(--muted); margin-bottom: 1.2rem; line-height: 1.6; }
+
+  /* Push content down when banner is shown */
+  body.trial-active header { margin-top: 32px; }
+
+  /* ── Activation code success flash ── */
+  .activate-success {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    background: rgba(10,8,4,0.97);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    animation: fadeInSuccess 0.4s ease;
+  }
+  @keyframes fadeInSuccess {
+    from { opacity: 0; transform: scale(0.97); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  .activate-success .success-icon {
+    font-size: 4rem;
+    filter: drop-shadow(0 0 30px rgba(90,170,58,0.7));
+    animation: iconBounce 0.5s ease 0.2s both;
+  }
+  @keyframes iconBounce {
+    from { transform: scale(0.5); opacity: 0; }
+    60%  { transform: scale(1.15); }
+    to   { transform: scale(1); opacity: 1; }
+  }
+  .activate-success h2 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.4rem;
+    color: var(--gold-light);
+    text-align: center;
+    text-shadow: 0 0 20px rgba(200,150,42,0.5);
+  }
+  .activate-success p {
+    font-family: 'EB Garamond', serif;
+    font-size: 1.05rem;
+    color: var(--parchment-dark);
+    text-align: center;
+    font-style: italic;
+    max-width: 320px;
+    line-height: 1.6;
+  }
+  .activate-success .days-badge {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: var(--olive-light);
+    background: rgba(90,122,58,0.15);
+    border: 1px solid rgba(90,122,58,0.35);
+    padding: 0.4rem 1.2rem;
+    border-radius: 3px;
+    text-transform: uppercase;
+  }
+
+  /* ── Code input glow on focus ── */
+  #activationCodeInput:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(200,150,42,0.12), 0 0 20px rgba(200,150,42,0.1);
+  }
+
+  @media (max-width: 768px) {
+    .plan-grid { grid-template-columns: 1fr; }
+    .gate-card { padding: 1.8rem 1.2rem; }
+    .gate-title { font-size: 1.3rem; }
+    body.trial-active header { margin-top: 28px; }
+    #trialBanner { font-size: 0.63rem; padding: 0.4rem 0.6rem; }
+  }
+
+  /* ── Hamburger toggle button ── */
+  .sidebar-toggle {
+    display: none;
+    position: fixed;
+    bottom: 90px;
+    right: 16px;
+    z-index: 1000;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.5), 0 0 0 2px rgba(200,150,42,0.3);
+    font-size: 1.2rem;
+    color: var(--ink);
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .sidebar-toggle:hover { transform: scale(1.08); box-shadow: 0 6px 20px rgba(200,150,42,0.4); }
+  .sidebar-toggle.open { background: linear-gradient(135deg, var(--crimson), #b02020); color: #fff; }
+
+  /* ── Backdrop ── */
+  .sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    z-index: 900;
+    backdrop-filter: blur(2px);
+  }
+  .sidebar-backdrop.visible { display: block; }
+
+  @media (max-width: 768px) {
+
+    /* Header compact */
+    header { padding: 1.2rem 1rem 1rem; }
+    .logo-emblem { font-size: 1.8rem; margin-bottom: 0.25rem; }
+    header h1 { font-size: 1.6rem; }
+    header p.tagline { font-size: 0.65rem; letter-spacing: 0.15em; }
+    .header-rule { margin-top: 0.8rem; max-width: 260px; }
+
+    /* App container — single column, full height */
+    .app-container {
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr;
+      height: calc(100dvh - 145px);
+    }
+
+    /* Sidebar — slides in as drawer from left */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: min(300px, 88vw);
+      height: 100dvh;
+      z-index: 950;
+      transform: translateX(-100%);
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .sidebar.open { transform: translateX(0); }
+
+    /* Show toggle button */
+    .sidebar-toggle { display: flex; }
+
+    /* Main area takes full width */
+    .main-area { grid-column: 1; }
+
+    /* Chat window */
+    .chat-window { padding: 0.8rem 0.9rem; gap: 1rem; }
+
+    /* Messages wider */
+    .message { max-width: 92%; }
+    .message-bubble { padding: 0.75rem 0.9rem; font-size: 0.97rem; }
+    .message-label { font-size: 0.58rem; }
+
+    /* Welcome screen */
+    .welcome-screen { padding: 1rem; gap: 1rem; }
+    .welcome-screen h2 { font-size: 1.1rem; }
+    .welcome-screen p { font-size: 0.9rem; }
+    .welcome-icon { font-size: 2.5rem; }
+    .quick-queries { gap: 0.4rem; }
+    .quick-query { padding: 0.4rem 0.7rem; font-size: 0.82rem; }
+
+    /* Input area — safe area for iOS home bar */
+    .input-area {
+      padding: 0.6rem 0.8rem;
+      padding-bottom: max(0.8rem, env(safe-area-inset-bottom));
+    }
+    .input-context { gap: 0.3rem; margin-bottom: 0.4rem; }
+    .context-chip { font-size: 0.62rem; padding: 0.15rem 0.45rem; }
+    .query-input { font-size: 1rem; padding: 0.65rem 0.8rem; min-height: 44px; }
+    .btn-send { width: 44px; height: 44px; font-size: 1rem; }
+    .input-hint { font-size: 0.62rem; }
+
+    /* Sidebar internals when open */
+    .sidebar-section { padding: 0.9rem 1rem 0.7rem; }
+    .sidebar-section h3 { font-size: 0.62rem; margin-bottom: 0.6rem; }
+    .source-item { padding: 0.45rem 0.6rem; }
+    .source-name { font-size: 0.75rem; }
+    .lang-pill { padding: 0.25rem 0.6rem; font-size: 0.8rem; }
+    .url-input { font-size: 0.78rem; padding: 0.3rem 0.5rem; }
+    .audio-panel { flex-wrap: wrap; gap: 0.4rem; padding: 0.5rem 1rem; }
+    .vol-slider { width: 55px; }
+    .token-info { padding: 0.4rem 1rem; }
+    .token-badge { font-size: 0.62rem; }
+
+    /* Typing indicator */
+    .typing-indicator { padding: 0.6rem 0.9rem; }
+
+    /* Speak buttons slightly larger tap target */
+    .speak-btn { padding: 0.12rem 0.5rem; font-size: 0.8rem; }
+    .phon-tip { font-size: 0.72rem; }
+  }
+
+  @media (max-width: 400px) {
+    header h1 { font-size: 1.3rem; }
+    .app-container { height: calc(100dvh - 130px); }
+    .message-bubble { font-size: 0.93rem; }
+    .quick-query { font-size: 0.78rem; padding: 0.35rem 0.6rem; }
+  }
+
+  /* Landscape mobile */
+  @media (max-width: 768px) and (orientation: landscape) {
+    header { padding: 0.7rem 1rem; }
+    .logo-emblem { display: none; }
+    header h1 { font-size: 1.2rem; }
+    .header-rule { display: none; }
+    .app-container { height: calc(100dvh - 90px); }
+    .welcome-screen { padding: 0.5rem; gap: 0.6rem; }
+  }
+
+  /* ── PRONUNCIATION BUTTON ── */
+  .speak-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: none;
+    border: 1px solid rgba(200,150,42,0.25);
+    border-radius: 2px;
+    padding: 0.05rem 0.35rem;
+    margin-left: 0.3rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: var(--gold-dim);
+    vertical-align: middle;
+    transition: all 0.18s;
+    position: relative;
+    top: -1px;
+  }
+  .speak-btn:hover {
+    background: rgba(200,150,42,0.12);
+    border-color: var(--gold);
+    color: var(--gold-light);
+    box-shadow: 0 0 8px rgba(200,150,42,0.2);
+  }
+  .speak-btn.playing {
+    background: rgba(200,150,42,0.18);
+    border-color: var(--gold-light);
+    color: var(--gold-light);
+    animation: speakPulse 0.6s infinite alternate;
+  }
+  @keyframes speakPulse {
+    from { box-shadow: 0 0 4px rgba(200,150,42,0.3); }
+    to   { box-shadow: 0 0 14px rgba(200,150,42,0.7); }
+  }
+  .speak-icon { font-size: 0.85rem; }
+
+  /* ── PHONETIC TOOLTIP ── */
+  .phon-wrapper {
+    display: inline-block;
+    position: relative;
+  }
+  .phon-wrapper .phon-tip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #0d0a04;
+    border: 1px solid var(--gold-dim);
+    border-radius: 3px;
+    padding: 0.3rem 0.6rem;
+    white-space: nowrap;
+    font-size: 0.78rem;
+    color: var(--parchment-dark);
+    font-style: normal;
+    font-family: 'EB Garamond', serif;
+    z-index: 100;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+  }
+  .phon-wrapper .phon-tip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--gold-dim);
+  }
+  .phon-wrapper:hover .phon-tip { display: block; }
+
+  /* ── AUDIO PANEL ── */
+  .audio-panel {
+    padding: 0.6rem 1.2rem;
+    border-top: 1px solid rgba(200,150,42,0.08);
+    background: rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  .audio-panel select {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    color: var(--parchment-dark);
+    font-family: 'EB Garamond', serif;
+    font-size: 0.72rem;
+    padding: 0.2rem 0.4rem;
+    outline: none;
+    cursor: pointer;
+  }
+  .audio-panel select option { background: #1a1208; color: var(--parchment-dark); }
+  .audio-label { font-family: 'Cinzel', serif; letter-spacing: 0.1em; color: var(--gold-dim); }
+  .vol-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 70px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--gold-dim);
+    outline: none;
+    cursor: pointer;
+  }
+  .vol-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--gold-light);
+    cursor: pointer;
+  }
+
+  /* Token info strip */
+  .token-info {
+    padding: 0.5rem 1.2rem;
+    border-top: 1px solid rgba(200,150,42,0.08);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: rgba(0,0,0,0.2);
+  }
+  .token-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.7rem;
+    color: var(--muted);
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.05em;
+  }
+  .token-badge .model-name { color: var(--gold-dim); }
+
+  /* URL loading overlay in chat */
+  .url-loading-msg {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1rem;
+    background: rgba(61,82,41,0.15);
+    border: 1px solid rgba(90,122,58,0.25);
+    border-radius: 3px;
+    font-size: 0.85rem;
+    color: var(--olive-light);
+    font-style: italic;
+    align-self: flex-start;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ TRIAL COUNTDOWN BANNER ══ -->
+<div id="trialBanner">
+  ✦ MODO PRUEBA GRATUITA · Tiempo restante: <strong id="trialCountdown">24:00:00</strong>
+  &nbsp;·&nbsp;
+  <span class="upgrade-link" onclick="showUpgrade()">Renovar acceso →</span>
+</div>
+
+<!-- ══ EXPIRED OVERLAY ══ -->
+<div id="expiredOverlay">
+  <div class="expired-card">
+    <div class="expired-icon">⏳</div>
+    <div class="expired-title">Tu período de prueba ha terminado</div>
+    <p class="expired-text">Para continuar usando LOGOS y acceder a todas las consultas teológicas, activa tu suscripción de 7 días.</p>
+    <button class="gate-btn primary" onclick="showUpgrade()" style="font-size:0.8rem; margin-bottom:0.6rem;">Ir al pago — $2.000 ARS</button>
+    <button class="gate-btn free-trial" onclick="showUpgradeWithCode()" style="font-size:0.78rem; border-color:var(--gold-dim); color:var(--gold-light);">🔑 Ya pagué — Ingresar código</button>
+  </div>
+</div>
+
+<!-- ══ ACCESS GATE ══ -->
+<div id="accessGate">
+  <div class="gate-card">
+    <div class="gate-emblem">✦</div>
+    <div class="gate-title">LOGOS</div>
+    <div class="gate-subtitle">Sistema de Consultas Teológicas · Adventista</div>
+
+    <!-- STEP 1: Plan selection + name -->
+    <div id="planStep">
+      <div class="plan-grid">
+        <div class="plan-card selected" id="planTrial" onclick="selectPlan('trial')">
+          <div class="plan-badge free">Gratis</div>
+          <div class="plan-name">Prueba</div>
+          <div class="plan-price">$0 <span>/ 1 día</span></div>
+          <div class="plan-desc">Acceso completo por 24 horas sin costo</div>
+        </div>
+        <div class="plan-card" id="planPago" onclick="selectPlan('paid')">
+          <div class="plan-badge">Acceso completo</div>
+          <div class="plan-name">Suscripción</div>
+          <div class="plan-price">$2.000 <span>/ 7 días</span></div>
+          <div class="plan-desc">Acceso completo por una semana</div>
+        </div>
+      </div>
+
+      <div class="gate-form">
+        <input type="text" class="gate-input" id="gateName" placeholder="Tu nombre completo" autocomplete="name">
+        <input type="email" class="gate-input" id="gateEmail" placeholder="Correo electrónico" autocomplete="email">
+        <button class="gate-btn primary" id="gateMainBtn" onclick="handleGateAction()">
+          Comenzar prueba gratuita — 1 día
+        </button>
+        <div class="gate-divider"><span>o</span></div>
+        <button class="gate-btn free-trial" onclick="selectPlan('paid'); scrollTo(0,0);">
+          Activar suscripción 7 días — $2.000 ARS
+        </button>
+      </div>
+
+      <p style="text-align:center; font-size:0.72rem; color:var(--muted); margin-top:1rem; font-style:italic; line-height:1.5;">
+        Al continuar aceptas los términos de uso.<br>
+        Editado por <strong style="color:var(--gold-dim)">Sergio Polanco</strong> · Comité académico adventista
+      </p>
+    </div>
+
+    <!-- STEP 2: Payment instructions -->
+    <div id="paymentStep">
+      <div class="payment-info">
+        <div style="font-family:'Cinzel',serif; font-size:0.65rem; letter-spacing:0.2em; color:var(--gold-dim); text-transform:uppercase; margin-bottom:0.5rem;">Total a pagar</div>
+        <div class="payment-amount">$2.000 <small>ARS</small></div>
+        <div style="font-size:0.78rem; color:var(--muted); margin-top:0.3rem; font-style:italic;">7 días de acceso completo</div>
+      </div>
+
+      <ul class="payment-steps-list">
+        <li>
+          <span class="step-num">1</span>
+          <span>Abre tu app de <strong>Mercado Pago</strong> y ve a <em>Transferir / Pagar</em></span>
+        </li>
+        <li>
+          <span class="step-num">2</span>
+          <span>Ingresa el alias:</span>
+        </li>
+      </ul>
+
+      <div class="mp-alias">
+        <span id="aliasText">amigo.quiero.maple</span>
+        <button class="copy-alias-btn" id="copyAliasBtn" onclick="copyAlias()">📋 Copiar</button>
+      </div>
+
+      <ul class="payment-steps-list" style="margin-top:0.5rem;">
+        <li>
+          <span class="step-num">3</span>
+          <span>Transfiere <strong>$2.000 ARS</strong> e incluye tu nombre en el concepto</span>
+        </li>
+        <li>
+          <span class="step-num">4</span>
+          <span>Envía el comprobante al WhatsApp para confirmar tu acceso</span>
+        </li>
+      </ul>
+
+      <a id="whatsappConfirmBtn" class="wa-btn" target="_blank">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Confirmar pago por WhatsApp
+      </a>
+
+      <!-- ── Separador hacia código ── -->
+      <div class="gate-divider" style="margin-top:1rem;"><span>¿Ya tienes tu código?</span></div>
+      <button class="gate-btn free-trial" style="border-color:var(--gold-dim); color:var(--gold-light);" onclick="showActivationStep()">
+        🔑 Ingresar código de activación
+      </button>
+
+      <button class="gate-back-btn" onclick="goBackToPlans()">← Volver a planes</button>
+    </div>
+
+    <!-- STEP 3: Código de activación -->
+    <div id="activationStep" style="display:none;">
+      <div style="text-align:center; margin-bottom:1.2rem;">
+        <div style="font-size:2.5rem; margin-bottom:0.4rem;">🔑</div>
+        <div style="font-family:'Cinzel',serif; font-size:1rem; color:var(--gold-light); letter-spacing:0.08em;">Código de Activación</div>
+        <p style="font-size:0.82rem; color:var(--muted); margin-top:0.4rem; line-height:1.5; font-style:italic;">
+          Ingresa el código que recibiste por WhatsApp después de confirmar tu pago.
+        </p>
+      </div>
+
+      <div class="gate-form">
+        <div style="position:relative;">
+          <input type="text" class="gate-input" id="activationCodeInput"
+            placeholder="Ej: LOGOS-XXXX-XXXX"
+            maxlength="16"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="characters"
+            spellcheck="false"
+            style="text-align:center; font-family:'Cinzel',serif; letter-spacing:0.2em; font-size:1.1rem; text-transform:uppercase;"
+            oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9-]/g,'')"
+          >
+        </div>
+        <div id="activationError" style="display:none; text-align:center; font-size:0.8rem; color:var(--crimson-light); font-style:italic; padding:0.3rem;"></div>
+        <button class="gate-btn primary" onclick="validateActivationCode()">
+          ✦ Activar acceso
+        </button>
+      </div>
+
+      <div style="margin-top:0.8rem; padding:0.8rem; background:rgba(200,150,42,0.05); border:1px solid rgba(200,150,42,0.12); border-radius:4px; font-size:0.75rem; color:var(--muted); line-height:1.6;">
+        <strong style="color:var(--gold-dim); font-family:'Cinzel',serif; font-size:0.65rem; letter-spacing:0.15em;">¿CÓMO OBTENER EL CÓDIGO?</strong><br>
+        Luego de pagar por MercadoPago al alias <strong style="color:var(--parchment-dark)">amigo.quiero.maple</strong>, envía el comprobante al WhatsApp 
+        <strong style="color:var(--parchment-dark)">+54 9 343 415-8257</strong>. 
+        Recibirás tu código en minutos.
+      </div>
+
+      <button class="gate-back-btn" onclick="goBackToPayment()">← Volver al pago</button>
+    </div>
+
+  </div>
+</div>
+
+<header>
+  <div class="logo-emblem">✦</div>
+  <h1>LOGOS</h1>
+  <p class="tagline">Sistema de Consultas Teológicas · Adventista</p>
+  <div class="header-rule"><span>✦</span></div>
+</header>
+
+<!-- EDITORIAL TEAM STRIP -->
+<div class="editorial-strip">
+
+  <div class="editorial-person">
+    <span class="editorial-role">Editor General</span>
+    <span class="editorial-name"><strong>Sergio Polanco</strong></span>
+  </div>
+
+  <div class="editorial-divider"></div>
+  <span class="editorial-ornament">✦</span>
+
+  <div class="editorial-person">
+    <span class="editorial-role">Comité · Miembro</span>
+    <span class="editorial-name"><strong>Dr.</strong> Carmelo Martínez</span>
+  </div>
+
+  <div class="editorial-divider"></div>
+  <span class="editorial-ornament">✦</span>
+
+  <div class="editorial-person">
+    <span class="editorial-role">Comité · Miembro</span>
+    <span class="editorial-name"><strong>Dr.</strong> Juan Pizarro</span>
+  </div>
+
+  <div class="editorial-divider"></div>
+  <span class="editorial-ornament">✦</span>
+
+  <div class="editorial-person">
+    <span class="editorial-role">Comité · Miembro</span>
+    <span class="editorial-name"><strong>Dr.</strong> Carlos Cerda</span>
+  </div>
+
+</div>
+
+<div class="app-container">
+
+  <!-- Mobile sidebar backdrop -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebar()"></div>
+
+  <!-- Mobile sidebar toggle -->
+  <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" title="Menú / Configuración">☰</button>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-section">
+      <h3>⟜ Fuentes Activas</h3>
+      <div class="source-list" id="sourceList">
+        <label class="source-item active">
+          <input type="checkbox" checked data-src="bible"> 
+          <span class="source-icon">📖</span>
+          <span class="source-name">La Santa Biblia</span>
+          <span class="source-badge">RVR60</span>
+        </label>
+        <label class="source-item active">
+          <input type="checkbox" checked data-src="cba">
+          <span class="source-icon">📚</span>
+          <span class="source-name">Com. Bíblico Adv.</span>
+          <span class="source-badge">7 Vol.</span>
+        </label>
+        <label class="source-item active">
+          <input type="checkbox" checked data-src="dict">
+          <span class="source-icon">📘</span>
+          <span class="source-name">Diccionario Adv.</span>
+          <span class="source-badge">SDA</span>
+        </label>
+        <label class="source-item active">
+          <input type="checkbox" checked data-src="hebrew">
+          <span class="source-icon">א</span>
+          <span class="source-name">Léxico Hebreo</span>
+          <span class="source-badge">AT</span>
+        </label>
+        <label class="source-item active">
+          <input type="checkbox" checked data-src="greek">
+          <span class="source-icon">α</span>
+          <span class="source-name">Léxico Griego</span>
+          <span class="source-badge">NT</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <h3>⟜ Modo de Idioma</h3>
+      <div class="lang-pills">
+        <button class="lang-pill active" data-lang="auto">Auto</button>
+        <button class="lang-pill" data-lang="hebrew">Hebreo</button>
+        <button class="lang-pill" data-lang="greek">Griego</button>
+        <button class="lang-pill" data-lang="both">Ambos</button>
+      </div>
+    </div>
+
+    <div class="sidebar-section" style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+      <h3>⟜ Referencias por URL</h3>
+      <div class="url-refs">
+        <div class="url-input-row">
+          <input type="text" class="url-input" id="urlInput" placeholder="https://... (libro o recurso)">
+          <button class="btn-add-url" id="btnAddUrl" title="Agregar URL">+</button>
+        </div>
+        <div class="url-list" id="urlList"></div>
+      </div>
+    </div>
+
+    <div class="audio-panel">
+      <span class="audio-label">🔊 VOZ</span>
+      <select id="voiceSelect" title="Voz para pronunciación"></select>
+      <span>Vol</span>
+      <input type="range" class="vol-slider" id="volSlider" min="0" max="1" step="0.1" value="0.9">
+      <span>Vel</span>
+      <input type="range" class="vol-slider" id="rateSlider" min="0.5" max="1.2" step="0.05" value="0.8">
+    </div>
+
+    <div class="token-info">
+      <div class="token-badge">🔮 Modelo: <span class="model-name">claude-sonnet-4-6</span></div>
+      <div class="token-badge" id="tokenCount">Tokens: —</div>
+    </div>
+
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <div class="chat-window" id="chatWindow">
+
+      <div class="welcome-screen" id="welcomeScreen">
+        <div class="welcome-icon">✦</div>
+        <h2>Consulta Teológica Adventista</h2>
+        <p>Realiza consultas sobre La Biblia, el Comentario Bíblico Adventista y el Diccionario Adventista. Incluye términos en Hebreo (AT) o Griego (NT) para un análisis lingüístico profundo.</p>
+        <div class="quick-queries">
+          <button class="quick-query" onclick="sendQuickQuery(this)">¿Qué significa שָׁלוֹם (shalom)?</button>
+          <button class="quick-query" onclick="sendQuickQuery(this)">Explica ἀγάπη (agape) en el NT</button>
+          <button class="quick-query" onclick="sendQuickQuery(this)">¿Qué enseña el CBA sobre el estado de los muertos?</button>
+          <button class="quick-query" onclick="sendQuickQuery(this)">El concepto de נֶפֶשׁ (nephesh) en el AT</button>
+          <button class="quick-query" onclick="sendQuickQuery(this)">Doctrina del Santuario en Daniel 8:14</button>
+          <button class="quick-query" onclick="sendQuickQuery(this)">¿Qué es la διαθήκη (diatheke) bíblica?</button>
+        </div>
+      </div>
+
+      <div class="typing-indicator" id="typingIndicator">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>
+
+    </div>
+
+    <div class="input-area">
+      <div class="input-context" id="inputContext"></div>
+      <div class="input-row">
+        <textarea 
+          class="query-input" 
+          id="queryInput" 
+          placeholder="Escribe tu consulta teológica... (puede incluir términos en Hebreo א o Griego α)"
+          rows="1"
+        ></textarea>
+        <button class="btn-send" id="btnSend" onclick="sendMessage()">➤</button>
+      </div>
+      <div class="input-hint">Enter para enviar · Shift+Enter para nueva línea · Incluye referencias por URL en el panel lateral</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+const state = {
+  messages: [],
+  urls: [],
+  activeSources: new Set(['bible','cba','dict','hebrew','greek']),
+  langMode: 'auto',
+  isLoading: false,
+  totalTokens: 0
+};
+
+// ══════════════════════════════════════════
+// SYSTEM PROMPT BUILDER
+// ══════════════════════════════════════════
+function buildSystemPrompt() {
+  const sources = [];
+  if (state.activeSources.has('bible')) sources.push('La Santa Biblia (versión Reina-Valera 1960 como referencia principal, citando también otras versiones cuando sea útil)');
+  if (state.activeSources.has('cba')) sources.push('El Comentario Bíblico Adventista (CBA) - los 7 volúmenes editados por Francis Nichol, incluyendo perspectivas exegéticas y doctrinales adventistas');
+  if (state.activeSources.has('dict')) sources.push('El Diccionario Bíblico Adventista (SDA Bible Dictionary) - para definiciones de términos, lugares, personas y conceptos bíblicos');
+  if (state.activeSources.has('hebrew')) sources.push('Léxicos de Hebreo Bíblico (BDB, HALOT, TWOT) para el Antiguo Testamento - incluyendo raíces, morfología, y uso en contexto');
+  if (state.activeSources.has('greek')) sources.push('Léxicos de Griego Koiné (BDAG, Thayer, Vine) para el Nuevo Testamento - incluyendo morfología, etimología, y uso en papiros y LXX');
+
+  const urlContext = state.urls.filter(u => u.content).map((u,i) => 
+    `--- REFERENCIA URL #${i+1}: ${u.url} ---\n${u.content.substring(0, 3000)}\n---`
+  ).join('\n\n');
+
+  return `Eres LOGOS, un asistente teológico especializado para estudiantes adventistas del séptimo día. Eres un erudito con profundo conocimiento de:
+
+${sources.map((s,i) => `${i+1}. ${s}`).join('\n')}
+
+INSTRUCCIONES DE RESPUESTA:
+- Siempre estructura tus respuestas de forma académica pero accesible
+- Cuando analices términos en HEBREO (AT): presenta la palabra en caracteres hebreos, su transliteración, raíz verbal (שׁרשׁ), significado base, y cómo el CBA y el Diccionario Adventista la interpretan. Cita referencias bíblicas específicas.
+- Cuando analices términos en GRIEGO (NT): presenta la palabra griega, su transliteración, forma verbal/nominal en griego, uso en la LXX si aplica, y perspectiva adventista según el CBA.
+- Cita versículos con el formato: **Libro Capítulo:Versículo** (RVR60)
+- Menciona explícitamente cuando una interpretación proviene del CBA, del Diccionario Adventista, o de análisis lingüístico
+- Para doctrinas adventistas, siempre fundamenta desde las Escrituras y el CBA
+- Si el usuario provee URLs de referencia, incorpora ese contenido en tu análisis
+- Responde en español, insertando los términos originales en hebreo/griego con sus transliteraciones
+- Usa formato enriquecido: negritas para términos clave, cursivas para palabras en idiomas bíblicos, citas en bloque para versículos
+
+${urlContext ? `\nREFERENCIAS ADICIONALES PROPORCIONADAS POR EL USUARIO:\n${urlContext}` : ''}
+
+Modo de idioma actual: ${state.langMode === 'auto' ? 'Automático (detecta si es consulta de Hebreo AT o Griego NT)' : state.langMode === 'hebrew' ? 'Enfoque en Hebreo/Antiguo Testamento' : state.langMode === 'greek' ? 'Enfoque en Griego/Nuevo Testamento' : 'Ambos idiomas bíblicos'}`;
+}
+
+// ══════════════════════════════════════════
+// URL HANDLING
+// ══════════════════════════════════════════
+async function addUrl() {
+  const input = document.getElementById('urlInput');
+  const url = input.value.trim();
+  if (!url || !url.startsWith('http')) {
+    input.style.borderColor = 'var(--crimson)';
+    setTimeout(() => input.style.borderColor = '', 1500);
+    return;
+  }
+  if (state.urls.find(u => u.url === url)) return;
+
+  const urlObj = { url, content: null, status: 'loading', label: new URL(url).hostname };
+  state.urls.push(urlObj);
+  input.value = '';
+  renderUrlList();
+
+  // Fetch via Claude with web_fetch conceptually - we'll use a CORS proxy approach
+  // Since we can't do server-side fetching from pure HTML, we'll try to fetch with no-cors and inform user
+  try {
+    const resp = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`, { signal: AbortSignal.timeout(15000) });
+    const data = await resp.json();
+    if (data.contents) {
+      // Strip HTML tags
+      const tmp = document.createElement('div');
+      tmp.innerHTML = data.contents;
+      urlObj.content = tmp.textContent.replace(/\s+/g, ' ').trim().substring(0, 8000);
+      urlObj.status = 'ok';
+    } else {
+      urlObj.status = 'error';
+    }
+  } catch(e) {
+    // Try direct fetch as fallback
+    urlObj.status = 'error';
+    urlObj.content = `[URL referenciada: ${url} - el modelo tiene conocimiento de esta fuente si es un recurso conocido]`;
+  }
+  renderUrlList();
+  updateContextChips();
+}
+
+function removeUrl(idx) {
+  state.urls.splice(idx, 1);
+  renderUrlList();
+  updateContextChips();
+}
+
+function renderUrlList() {
+  const list = document.getElementById('urlList');
+  list.innerHTML = state.urls.map((u, i) => `
+    <div class="url-tag">
+      <div class="url-status ${u.status}"></div>
+      <span class="url-label" title="${u.url}">📎 ${u.label}</span>
+      <button class="btn-remove-url" onclick="removeUrl(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function updateContextChips() {
+  const ctx = document.getElementById('inputContext');
+  const chips = [];
+  if (state.activeSources.has('bible')) chips.push({ dot: '#5a7a3a', text: 'Biblia RVR60' });
+  if (state.activeSources.has('cba')) chips.push({ dot: '#c8962a', text: 'CBA 7 vol.' });
+  if (state.activeSources.has('dict')) chips.push({ dot: '#8a6518', text: 'Dic. Adventista' });
+  state.urls.filter(u => u.status !== 'error' || u.content).forEach(u => 
+    chips.push({ dot: '#5a7a3a', text: new URL(u.url).hostname })
+  );
+  ctx.innerHTML = chips.map(c => `
+    <div class="context-chip">
+      <div class="dot" style="background:${c.dot}"></div>${c.text}
+    </div>
+  `).join('');
+}
+
+// ══════════════════════════════════════════
+// RENDERING MESSAGES
+// ══════════════════════════════════════════
+function renderMarkdown(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/__(.*?)__/g, '<strong>$1</strong>')
+    .replace(/_(.*?)_/g, '<em>$1</em>')
+    .replace(/^### (.*?)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.*?)$/gm, '<h3>$1</h3>')
+    .replace(/^# (.*?)$/gm, '<h3>$1</h3>')
+    .replace(/^> (.*?)$/gm, '<blockquote>$1</blockquote>')
+    .replace(/^---$/gm, '<hr>')
+    .replace(/^[-•] (.*?)$/gm, '<li>$1</li>')
+    .replace(/<li>(.*?)<\/li>/gs, '<ul>$&</ul>')
+    .replace(/<\/ul>\s*<ul>/g, '')
+    // Highlight Hebrew/Greek looking text
+    .replace(/([אבגדהוזחטיכלמנסעפצקרשת][^\s,.:;!?]*)/g, '<span class="greek-hebrew">$1</span>')
+    .replace(/([αβγδεζηθικλμνξοπρστυφχψω][^\s,.:;!?]*)/gi, '<span class="greek-hebrew">$1</span>')
+    // Bible references
+    .replace(/(\b(?:Génesis|Éxodo|Levítico|Números|Deuteronomio|Josué|Jueces|Rut|Samuel|Reyes|Crónicas|Esdras|Nehemías|Ester|Job|Salmos?|Proverbios|Eclesiastés|Cantares|Isaías|Jeremías|Lamentaciones|Ezequiel|Daniel|Oseas|Joel|Amós|Abdías|Jonás|Miqueas|Nahúm|Habacuc|Sofonías|Hageo|Zacarías|Malaquías|Mateo|Marcos|Lucas|Juan|Hechos|Romanos|Corintios|Gálatas|Efesios|Filipenses|Colosenses|Tesalonicenses|Timoteo|Tito|Filemón|Hebreos|Santiago|Pedro|Apocalipsis|Jn|Mt|Mr|Lc|Hch|Ro|Ap|Sal|Dn|Is|Jer|Ez|Gn|Ex|Lv|Nm|Dt|1|2|3) \d+:\d+(?:-\d+)?)/g,
+      '<span class="reference">$1</span>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>');
+}
+
+function appendMessage(role, content) {
+  const window = document.getElementById('chatWindow');
+  const welcomeScreen = document.getElementById('welcomeScreen');
+  welcomeScreen.classList.add('hidden');
+
+  const div = document.createElement('div');
+  div.className = `message ${role}`;
+  div.innerHTML = `
+    <div class="message-label">${role === 'user' ? '✦ Tu consulta' : '✦ LOGOS · Respuesta teológica'}</div>
+    <div class="message-bubble">${role === 'assistant' ? `<p>${renderMarkdown(content)}</p>` : content}</div>
+  `;
+  window.insertBefore(div, document.getElementById('typingIndicator'));
+  window.scrollTop = window.scrollHeight;
+}
+
+// ══════════════════════════════════════════
+// API CALL
+// ══════════════════════════════════════════
+async function callClaude(userMessage) {
+  state.messages.push({ role: 'user', content: userMessage });
+
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 1000,
+      system: buildSystemPrompt(),
+      messages: state.messages
+    })
+  });
+
+  if (!response.ok) throw new Error(`API Error: ${response.status}`);
+  const data = await response.json();
+
+  const assistantText = data.content.map(b => b.type === 'text' ? b.text : '').join('');
+  state.messages.push({ role: 'assistant', content: assistantText });
+
+  if (data.usage) {
+    state.totalTokens += (data.usage.input_tokens || 0) + (data.usage.output_tokens || 0);
+    document.getElementById('tokenCount').textContent = `Tokens: ${state.totalTokens.toLocaleString()}`;
+  }
+
+  return assistantText;
+}
+
+// ══════════════════════════════════════════
+// SEND MESSAGE
+// ══════════════════════════════════════════
+async function sendMessage() {
+  if (state.isLoading) return;
+  const input = document.getElementById('queryInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  state.isLoading = true;
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('btnSend').disabled = true;
+
+  appendMessage('user', text);
+
+  const indicator = document.getElementById('typingIndicator');
+  indicator.classList.add('visible');
+  document.getElementById('chatWindow').scrollTop = 9999;
+
+  try {
+    const reply = await callClaude(text);
+    indicator.classList.remove('visible');
+    appendMessage('assistant', reply);
+  } catch (err) {
+    indicator.classList.remove('visible');
+    appendMessage('assistant', `⚠ *Error de conexión*: ${err.message}\n\nVerifica tu clave de API de Anthropic. La aplicación usa el modelo **claude-sonnet-4-6** a través de la API de Anthropic.`);
+  }
+
+  state.isLoading = false;
+  document.getElementById('btnSend').disabled = false;
+  input.focus();
+}
+
+function sendQuickQuery(btn) {
+  const text = btn.textContent;
+  document.getElementById('queryInput').value = text;
+  sendMessage();
+}
+
+// ══════════════════════════════════════════
+// EVENT LISTENERS
+// ══════════════════════════════════════════
+document.getElementById('queryInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+
+document.getElementById('queryInput').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+});
+
+document.getElementById('btnAddUrl').addEventListener('click', addUrl);
+document.getElementById('urlInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addUrl();
+});
+
+// Source checkboxes
+document.querySelectorAll('[data-src]').forEach(cb => {
+  cb.addEventListener('change', function() {
+    const src = this.dataset.src;
+    if (this.checked) state.activeSources.add(src);
+    else state.activeSources.delete(src);
+    this.closest('.source-item').classList.toggle('active', this.checked);
+    updateContextChips();
+  });
+});
+
+// Language pills
+document.querySelectorAll('[data-lang]').forEach(pill => {
+  pill.addEventListener('click', function() {
+    document.querySelectorAll('[data-lang]').forEach(p => p.classList.remove('active'));
+    this.classList.add('active');
+    state.langMode = this.dataset.lang;
+  });
+});
+
+// Init
+updateContextChips();
+
+// ══════════════════════════════════════════════════════════════════
+// PRONUNCIATION ENGINE — HEBREW & GREEK
+// ══════════════════════════════════════════════════════════════════
+
+// ── Transliteration tables ──────────────────────────────────────
+const HEBREW_TRANSLIT = {
+  'א':'', 'ב':'v', 'ג':'g', 'ד':'d', 'ה':'h', 'ו':'v', 'ז':'z',
+  'ח':'j', 'ט':'t', 'י':'y', 'כ':'j', 'ך':'j', 'ל':'l', 'מ':'m',
+  'ם':'m', 'נ':'n', 'ן':'n', 'ס':'s', 'ע':'', 'פ':'f', 'ף':'f',
+  'צ':'ts', 'ץ':'ts', 'ק':'k', 'ר':'r', 'שׁ':'sh', 'שׂ':'s',
+  'ש':'sh', 'ת':'t',
+  // Niqqud (vocales)
+  '\u05B0':'e', '\u05B1':'e', '\u05B2':'a', '\u05B3':'o',
+  '\u05B4':'i', '\u05B5':'e', '\u05B6':'e', '\u05B7':'a',
+  '\u05B8':'a', '\u05B9':'o', '\u05BA':'o', '\u05BB':'u',
+  '\u05BC':'', '\u05BD':'', '\u05BE':'-', '\u05BF':'v',
+  '\u05C1':'sh', '\u05C2':'s',
+};
+
+const GREEK_TRANSLIT = {
+  'α':'a','β':'v','γ':'g','δ':'d','ε':'e','ζ':'z','η':'i',
+  'θ':'th','ι':'i','κ':'k','λ':'l','μ':'m','ν':'n','ξ':'x',
+  'ο':'o','π':'p','ρ':'r','σ':'s','ς':'s','τ':'t','υ':'i',
+  'φ':'f','χ':'j','ψ':'ps','ω':'o',
+  // Uppercase
+  'Α':'a','Β':'v','Γ':'g','Δ':'d','Ε':'e','Ζ':'z','Η':'i',
+  'Θ':'th','Ι':'i','Κ':'k','Λ':'l','Μ':'m','Ν':'n','Ξ':'x',
+  'Ο':'o','Π':'p','Ρ':'r','Σ':'s','Τ':'t','Υ':'i',
+  'Φ':'f','Χ':'j','Ψ':'ps','Ω':'o',
+};
+
+// ── Curated phonetic pronunciations for key biblical terms ───────
+// Format: 'word' : { phonetic: 'IPA-like readable', lang: 'he'|'el', meaning: '...' }
+const BIBLICAL_LEXICON = {
+  // ── HEBREO ──
+  'שָׁלוֹם': { phonetic: 'sha-LOM', lang: 'he', meaning: 'paz, bienestar, integridad' },
+  'שלום':    { phonetic: 'sha-LOM', lang: 'he', meaning: 'paz, bienestar' },
+  'יְהוָה':  { phonetic: 'Yah-WEH', lang: 'he', meaning: 'El Señor, el Eterno' },
+  'יהוה':    { phonetic: 'Yah-WEH', lang: 'he', meaning: 'El Señor (Tetragrámaton)' },
+  'אֱלֹהִים':{ phonetic: 'Eh-lo-HIM', lang: 'he', meaning: 'Dios (plural majestuoso)' },
+  'אלהים':  { phonetic: 'Eh-lo-HIM', lang: 'he', meaning: 'Dios' },
+  'נֶפֶשׁ':  { phonetic: 'NE-fesh', lang: 'he', meaning: 'alma, ser viviente, vida' },
+  'נפש':    { phonetic: 'NE-fesh', lang: 'he', meaning: 'alma, ser viviente' },
+  'רוּחַ':   { phonetic: 'RU-aj', lang: 'he', meaning: 'espíritu, viento, aliento' },
+  'רוח':    { phonetic: 'RU-aj', lang: 'he', meaning: 'espíritu, viento' },
+  'חֶסֶד':  { phonetic: 'JE-sed', lang: 'he', meaning: 'amor leal, misericordia' },
+  'חסד':    { phonetic: 'JE-sed', lang: 'he', meaning: 'amor leal, misericordia' },
+  'אֶמֶת':  { phonetic: 'E-met', lang: 'he', meaning: 'verdad, fidelidad' },
+  'אמת':    { phonetic: 'E-met', lang: 'he', meaning: 'verdad, fidelidad' },
+  'צְדָקָה': { phonetic: 'tsda-KA', lang: 'he', meaning: 'justicia, rectitud' },
+  'צדקה':   { phonetic: 'tsda-KA', lang: 'he', meaning: 'justicia' },
+  'תּוֹרָה': { phonetic: 'to-RA', lang: 'he', meaning: 'ley, instrucción, enseñanza' },
+  'תורה':   { phonetic: 'to-RA', lang: 'he', meaning: 'Ley, Torah' },
+  'מָשִׁיחַ':{ phonetic: 'ma-SHI-aj', lang: 'he', meaning: 'ungido, Mesías' },
+  'משיח':   { phonetic: 'ma-SHI-aj', lang: 'he', meaning: 'ungido, Mesías' },
+  'בְּרִית': { phonetic: 'be-RIT', lang: 'he', meaning: 'pacto, alianza' },
+  'ברית':   { phonetic: 'be-RIT', lang: 'he', meaning: 'pacto, alianza' },
+  'קֹדֶשׁ':  { phonetic: 'KO-desh', lang: 'he', meaning: 'santidad, separado' },
+  'קודש':   { phonetic: 'KO-desh', lang: 'he', meaning: 'santidad' },
+  'עֵדֶן':  { phonetic: 'E-den', lang: 'he', meaning: 'deleite, paraíso' },
+  'שַׁבָּת': { phonetic: 'sha-BAT', lang: 'he', meaning: 'descanso, séptimo día' },
+  'שבת':    { phonetic: 'sha-BAT', lang: 'he', meaning: 'sábado, descanso' },
+  'אֶבֶן':  { phonetic: 'E-ven', lang: 'he', meaning: 'piedra' },
+  'כִּפֻּר': { phonetic: 'ki-PUR', lang: 'he', meaning: 'expiación, cubierta' },
+  'כפר':    { phonetic: 'ka-PAR', lang: 'he', meaning: 'expiar, cubrir' },
+  'מִשְׁכָּן':{ phonetic: 'mish-KAN', lang: 'he', meaning: 'tabernáculo, morada' },
+  'אֱמוּנָה':{ phonetic: 'e-mu-NA', lang: 'he', meaning: 'fe, fidelidad' },
+  'אמונה':  { phonetic: 'e-mu-NA', lang: 'he', meaning: 'fe, fidelidad' },
+
+  // ── GRIEGO ──
+  'ἀγάπη':  { phonetic: 'a-GA-pi', lang: 'el', meaning: 'amor incondicional, divino' },
+  'ἀγαπη':  { phonetic: 'a-GA-pi', lang: 'el', meaning: 'amor divino' },
+  'λόγος':  { phonetic: 'LO-gos', lang: 'el', meaning: 'palabra, razón, el Verbo' },
+  'λογος':  { phonetic: 'LO-gos', lang: 'el', meaning: 'palabra, el Verbo' },
+  'πίστις': { phonetic: 'PIS-tis', lang: 'el', meaning: 'fe, confianza, fidelidad' },
+  'πιστις': { phonetic: 'PIS-tis', lang: 'el', meaning: 'fe, confianza' },
+  'χάρις':  { phonetic: 'JA-ris', lang: 'el', meaning: 'gracia, favor inmerecido' },
+  'χαρις':  { phonetic: 'JA-ris', lang: 'el', meaning: 'gracia' },
+  'εἰρήνη': { phonetic: 'i-RI-ni', lang: 'el', meaning: 'paz' },
+  'ειρηνη': { phonetic: 'i-RI-ni', lang: 'el', meaning: 'paz' },
+  'σωτηρία':{ phonetic: 'so-ti-RI-a', lang: 'el', meaning: 'salvación, liberación' },
+  'σωτηρια':{ phonetic: 'so-ti-RI-a', lang: 'el', meaning: 'salvación' },
+  'βασιλεία':{ phonetic: 'va-si-LI-a', lang: 'el', meaning: 'reino, reinado' },
+  'βασιλεια':{ phonetic: 'va-si-LI-a', lang: 'el', meaning: 'reino de Dios' },
+  'ἐκκλησία':{ phonetic: 'ek-kli-SI-a', lang: 'el', meaning: 'iglesia, asamblea llamada' },
+  'εκκλησια':{ phonetic: 'ek-kli-SI-a', lang: 'el', meaning: 'iglesia' },
+  'διαθήκη':{ phonetic: 'dia-THI-ki', lang: 'el', meaning: 'pacto, testamento' },
+  'διαθηκη':{ phonetic: 'dia-THI-ki', lang: 'el', meaning: 'pacto, testamento' },
+  'παρουσία':{ phonetic: 'pa-ru-SI-a', lang: 'el', meaning: 'segunda venida, presencia' },
+  'παρουσια':{ phonetic: 'pa-ru-SI-a', lang: 'el', meaning: 'venida, presencia' },
+  'μετάνοια':{ phonetic: 'me-TA-nia', lang: 'el', meaning: 'arrepentimiento, cambio de mente' },
+  'μετανοια':{ phonetic: 'me-TA-nia', lang: 'el', meaning: 'arrepentimiento' },
+  'ἀνάστασις':{ phonetic: 'a-NAS-ta-sis', lang: 'el', meaning: 'resurrección, levantamiento' },
+  'αναστασις':{ phonetic: 'a-NAS-ta-sis', lang: 'el', meaning: 'resurrección' },
+  'πνεῦμα': { phonetic: 'PNEV-ma', lang: 'el', meaning: 'espíritu, viento, aliento' },
+  'πνευμα': { phonetic: 'PNEV-ma', lang: 'el', meaning: 'espíritu' },
+  'δικαιοσύνη':{ phonetic: 'di-ke-o-SI-ni', lang: 'el', meaning: 'justicia, rectitud' },
+  'δικαιοσυνη':{ phonetic: 'di-ke-o-SI-ni', lang: 'el', meaning: 'justicia' },
+  'ἁμαρτία':{ phonetic: 'ha-mar-TI-a', lang: 'el', meaning: 'pecado, errar el blanco' },
+  'αμαρτια': { phonetic: 'ha-mar-TI-a', lang: 'el', meaning: 'pecado' },
+  'χριστός': { phonetic: 'jris-TOS', lang: 'el', meaning: 'ungido, Cristo' },
+  'χριστος': { phonetic: 'jris-TOS', lang: 'el', meaning: 'Cristo, ungido' },
+  'κύριος':  { phonetic: 'KI-ri-os', lang: 'el', meaning: 'Señor, soberano, dueño' },
+  'κυριος':  { phonetic: 'KI-ri-os', lang: 'el', meaning: 'Señor' },
+  'θεός':    { phonetic: 'the-OS', lang: 'el', meaning: 'Dios, deidad' },
+  'θεος':    { phonetic: 'the-OS', lang: 'el', meaning: 'Dios' },
+  'φιλία':   { phonetic: 'fi-LI-a', lang: 'el', meaning: 'amor de amistad, afecto' },
+  'φιλια':   { phonetic: 'fi-LI-a', lang: 'el', meaning: 'amor de amistad' },
+  'ἔρως':    { phonetic: 'E-ros', lang: 'el', meaning: 'amor romántico, deseo' },
+  'στοργή':  { phonetic: 'stor-GI', lang: 'el', meaning: 'amor familiar, ternura' },
+  'εὐαγγέλιον':{ phonetic: 'ev-an-GE-lion', lang: 'el', meaning: 'evangelio, buena noticia' },
+  'ευαγγελιον':{ phonetic: 'ev-an-GE-lion', lang: 'el', meaning: 'evangelio' },
+  'ἀπόστολος':{ phonetic: 'a-POS-to-los', lang: 'el', meaning: 'apóstol, enviado' },
+  'αποστολος':{ phonetic: 'a-POS-to-los', lang: 'el', meaning: 'apóstol' },
+  'σάββατον': { phonetic: 'SA-va-ton', lang: 'el', meaning: 'sábado, reposo' },
+  'σαββατον': { phonetic: 'SA-va-ton', lang: 'el', meaning: 'sábado' },
+};
+
+// ── Detect language of word ──────────────────────────────────────
+function detectBiblicalLang(word) {
+  const hebrewRange = /[\u0590-\u05FF]/;
+  const greekRange  = /[\u0370-\u03FF\u1F00-\u1FFF]/;
+  if (hebrewRange.test(word)) return 'he';
+  if (greekRange.test(word))  return 'el';
+  return null;
+}
+
+// ── Transliterate Hebrew ─────────────────────────────────────────
+function transliterateHebrew(word) {
+  let result = '';
+  const chars = [...word];
+  for (let i = 0; i < chars.length; i++) {
+    const c = chars[i];
+    // check two-char combos (shin with dagesh)
+    const pair = chars[i] + (chars[i+1] || '');
+    if (HEBREW_TRANSLIT[pair] !== undefined) {
+      result += HEBREW_TRANSLIT[pair]; i++; continue;
+    }
+    result += HEBREW_TRANSLIT[c] !== undefined ? HEBREW_TRANSLIT[c] : c;
+  }
+  return result || word;
+}
+
+// ── Transliterate Greek ──────────────────────────────────────────
+function transliterateGreek(word) {
+  let result = '';
+  const clean = word.normalize('NFD').replace(/[\u0300-\u036f]/g, '').normalize('NFC');
+  for (const c of [...clean]) {
+    result += GREEK_TRANSLIT[c] !== undefined ? GREEK_TRANSLIT[c] : c;
+  }
+  return result || word;
+}
+
+// ── Web Speech API setup ─────────────────────────────────────────
+let voices = [];
+let selectedVoiceURI = null;
+let ttsVolume = 0.9;
+let ttsRate   = 0.8;
+let currentUtterance = null;
+
+function loadVoices() {
+  voices = window.speechSynthesis.getVoices();
+  const sel = document.getElementById('voiceSelect');
+  if (!sel) return;
+  sel.innerHTML = '';
+  // Preferred languages for biblical text
+  const preferred = ['es','he','el','en'];
+  const sorted = [...voices].sort((a,b) => {
+    const ai = preferred.findIndex(l => a.lang.startsWith(l));
+    const bi = preferred.findIndex(l => b.lang.startsWith(l));
+    return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+  });
+  sorted.forEach(v => {
+    const opt = document.createElement('option');
+    opt.value = v.voiceURI;
+    opt.textContent = `${v.name} (${v.lang})`;
+    sel.appendChild(opt);
+  });
+  // Default: prefer Hebrew or Spanish voice
+  const heVoice = voices.find(v => v.lang.startsWith('he'));
+  const esVoice = voices.find(v => v.lang.startsWith('es'));
+  selectedVoiceURI = (heVoice || esVoice || voices[0])?.voiceURI || null;
+  if (sel.querySelector(`option[value="${selectedVoiceURI}"]`)) {
+    sel.value = selectedVoiceURI;
+  }
+}
+
+if (typeof speechSynthesis !== 'undefined') {
+  speechSynthesis.addEventListener('voiceschanged', loadVoices);
+  loadVoices();
+}
+
+document.getElementById('voiceSelect')?.addEventListener('change', function() {
+  selectedVoiceURI = this.value;
+});
+document.getElementById('volSlider')?.addEventListener('input', function() {
+  ttsVolume = parseFloat(this.value);
+});
+document.getElementById('rateSlider')?.addEventListener('input', function() {
+  ttsRate = parseFloat(this.value);
+});
+
+// ── Core speak function ──────────────────────────────────────────
+function speakWord(word, btn) {
+  if (!window.speechSynthesis) {
+    alert('Tu navegador no soporta síntesis de voz. Prueba Chrome o Edge.');
+    return;
+  }
+  // Stop any current speech
+  window.speechSynthesis.cancel();
+  if (currentUtterance && btn.classList.contains('playing')) {
+    btn.classList.remove('playing');
+    btn.innerHTML = '<span class="speak-icon">🔊</span>';
+    currentUtterance = null;
+    return;
+  }
+
+  const lang = detectBiblicalLang(word);
+  const entry = BIBLICAL_LEXICON[word] || BIBLICAL_LEXICON[word.normalize('NFC')];
+
+  // Determine text to speak
+  let speakText = word;
+  let langCode = 'es-ES';
+
+  if (entry) {
+    // Use curated phonetic
+    speakText = entry.phonetic.replace(/-/g, ' ').toLowerCase();
+    langCode = entry.lang === 'he' ? 'he-IL' : entry.lang === 'el' ? 'el-GR' : 'es-ES';
+  } else if (lang === 'he') {
+    speakText = transliterateHebrew(word);
+    langCode = 'he-IL';
+  } else if (lang === 'el') {
+    speakText = transliterateGreek(word);
+    langCode = 'el-GR';
+  }
+
+  const utter = new SpeechSynthesisUtterance(speakText);
+  utter.volume = ttsVolume;
+  utter.rate = ttsRate;
+  utter.pitch = 1.05;
+
+  // Try to find a voice matching the language
+  const targetVoice =
+    voices.find(v => v.voiceURI === selectedVoiceURI) ||
+    voices.find(v => v.lang.startsWith(langCode.split('-')[0])) ||
+    voices.find(v => v.lang.startsWith('es')) ||
+    voices[0];
+
+  if (targetVoice) utter.voice = targetVoice;
+  utter.lang = langCode;
+
+  btn.classList.add('playing');
+  btn.innerHTML = '<span class="speak-icon">⏹</span>';
+  currentUtterance = utter;
+
+  utter.onend = utter.onerror = () => {
+    btn.classList.remove('playing');
+    btn.innerHTML = '<span class="speak-icon">🔊</span>';
+    currentUtterance = null;
+  };
+
+  window.speechSynthesis.speak(utter);
+}
+
+// ── Read full response as text ───────────────────────────────────
+function speakFullText(text, btn) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  if (btn.classList.contains('playing')) {
+    btn.classList.remove('playing');
+    btn.textContent = '🔊 Leer';
+    return;
+  }
+  // Strip markdown symbols
+  const clean = text.replace(/\*\*/g,'').replace(/\*/g,'').replace(/#/g,'')
+    .replace(/[אבגדהוזחטיכלמנסעפצקרשת\u0590-\u05FF]+/g, m => transliterateHebrew(m))
+    .replace(/[\u0370-\u03FF\u1F00-\u1FFF]+/g, m => transliterateGreek(m));
+  const utter = new SpeechSynthesisUtterance(clean);
+  utter.volume = ttsVolume;
+  utter.rate = ttsRate;
+  utter.lang = 'es-ES';
+  const esVoice = voices.find(v => v.voiceURI === selectedVoiceURI) || voices.find(v => v.lang.startsWith('es')) || voices[0];
+  if (esVoice) utter.voice = esVoice;
+  btn.classList.add('playing');
+  btn.textContent = '⏹ Detener';
+  utter.onend = utter.onerror = () => {
+    btn.classList.remove('playing');
+    btn.textContent = '🔊 Leer';
+  };
+  window.speechSynthesis.speak(utter);
+}
+
+// ── Wrap Hebrew/Greek spans with speak buttons after render ──────
+function addSpeakButtons(container) {
+  // Find all .greek-hebrew spans and enhance them
+  container.querySelectorAll('.greek-hebrew').forEach(span => {
+    const word = span.textContent.trim();
+    if (!word || span.querySelector('.speak-btn')) return;
+    const lang = detectBiblicalLang(word);
+    if (!lang) return;
+
+    const entry = BIBLICAL_LEXICON[word] || BIBLICAL_LEXICON[word.normalize('NFC')];
+    const phonetic = entry ? entry.phonetic : (lang === 'he' ? transliterateHebrew(word) : transliterateGreek(word));
+    const meaning = entry ? entry.meaning : '';
+
+    // Wrap in tooltip wrapper
+    const wrapper = document.createElement('span');
+    wrapper.className = 'phon-wrapper';
+
+    const tip = document.createElement('span');
+    tip.className = 'phon-tip';
+    tip.textContent = `/${phonetic}/  ${meaning ? '— ' + meaning : ''}`;
+
+    const btn = document.createElement('button');
+    btn.className = 'speak-btn';
+    btn.title = `Pronunciar: ${phonetic}`;
+    btn.innerHTML = '<span class="speak-icon">🔊</span>';
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      speakWord(word, btn);
+    });
+
+    // Rearrange: move span content into wrapper
+    span.parentNode.insertBefore(wrapper, span);
+    wrapper.appendChild(span);
+    wrapper.appendChild(tip);
+    wrapper.appendChild(btn);
+  });
+}
+
+// ── Override appendMessage to add read-aloud button + speak btns ─
+const _origAppendMessage = appendMessage;
+window.appendMessage = function(role, content) {
+  _origAppendMessage(role, content);
+  // Find last inserted message
+  const msgs = document.querySelectorAll('.message');
+  const last = msgs[msgs.length - 1];
+  if (!last) return;
+  const bubble = last.querySelector('.message-bubble');
+  if (bubble) {
+    addSpeakButtons(bubble);
+    // Add "read aloud" button only for assistant messages
+    if (role === 'assistant') {
+      const readBtn = document.createElement('button');
+      readBtn.className = 'speak-btn';
+      readBtn.style.cssText = 'margin-top:0.6rem; display:flex; font-size:0.78rem; padding:0.2rem 0.6rem; gap:0.3rem;';
+      readBtn.textContent = '🔊 Leer respuesta';
+      readBtn.addEventListener('click', () => speakFullText(content, readBtn));
+      bubble.appendChild(document.createElement('br'));
+      bubble.appendChild(readBtn);
+    }
+  }
+};
+
+// Override original to use new wrapper
+appendMessage = window.appendMessage;
+
+// ══════════════════════════════════════════
+// MOBILE SIDEBAR TOGGLE
+// ══════════════════════════════════════════
+function toggleSidebar() {
+  const sidebar  = document.querySelector('.sidebar');
+  const backdrop = document.getElementById('sidebarBackdrop');
+  const btn      = document.getElementById('sidebarToggle');
+  const isOpen   = sidebar.classList.contains('open');
+  if (isOpen) {
+    closeSidebar();
+  } else {
+    sidebar.classList.add('open');
+    backdrop.classList.add('visible');
+    btn.classList.add('open');
+    btn.textContent = '✕';
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeSidebar() {
+  const sidebar  = document.querySelector('.sidebar');
+  const backdrop = document.getElementById('sidebarBackdrop');
+  const btn      = document.getElementById('sidebarToggle');
+  sidebar.classList.remove('open');
+  backdrop.classList.remove('visible');
+  btn.classList.remove('open');
+  btn.textContent = '☰';
+  document.body.style.overflow = '';
+}
+
+// Close sidebar after selecting a source/lang on mobile
+document.querySelectorAll('[data-src], [data-lang]').forEach(el => {
+  el.addEventListener('change', () => { if (window.innerWidth <= 768) closeSidebar(); });
+  el.addEventListener('click',  () => { if (window.innerWidth <= 768 && el.tagName === 'BUTTON') closeSidebar(); });
+});
+
+// Dismiss keyboard on send (mobile UX)
+document.getElementById('btnSend').addEventListener('click', () => {
+  if (window.innerWidth <= 768) document.getElementById('queryInput').blur();
+});
+
+// ══════════════════════════════════════════════════════════════════
+// SISTEMA MONETARIO — ACCESO Y SUSCRIPCIÓN
+// ══════════════════════════════════════════════════════════════════
+
+const MONETIZE = {
+  WA_NUMBER:    '5493434158257',
+  ALIAS_MP:     'amigo.quiero.maple',
+  PRICE_ARS:    2000,
+  DAYS_PAID:    7,
+  TRIAL_HOURS:  24,
+  STORAGE_KEY:  'logos_access_v1',
+  CODE_SECRET:  'LOGOS2025SP',   // semilla secreta para generar/validar códigos
+};
+
+// ══════════════════════════════════════════
+// SISTEMA DE CÓDIGOS DE ACTIVACIÓN
+// ══════════════════════════════════════════
+// Algoritmo: el código tiene formato LOGOS-XXXX-XXXX
+// Las 8 letras/números son un hash del nombre+fecha+secreto
+// El admin genera el código con la función generarCodigo(nombre, fechaISO)
+// El usuario lo ingresa y el cliente lo valida localmente
+
+const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // sin I,O,1,0 para evitar confusión
+
+function simpleHash(str) {
+  // DJB2 hash — determinístico, liviano, funciona en browser
+  let h = 5381;
+  for (let i = 0; i < str.length; i++) {
+    h = ((h << 5) + h) ^ str.charCodeAt(i);
+    h = h >>> 0; // fuerza uint32
+  }
+  return h;
+}
+
+function buildCodePayload(name, dateStr) {
+  // dateStr: 'YYYYMMDD'  ej: '20250301'
+  // Normalizar nombre: mayúsculas, sin tildes, solo letras
+  const normName = name.toUpperCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^A-Z0-9]/g, '');
+  return `${MONETIZE.CODE_SECRET}|${normName}|${dateStr}`;
+}
+
+function generateCode(name, dateStr) {
+  // Genera el código que el ADMIN debe enviarle al usuario
+  const payload = buildCodePayload(name, dateStr);
+  const h1 = simpleHash(payload);
+  const h2 = simpleHash(payload + 'SALT2');
+  let part1 = '', part2 = '';
+  let n1 = h1, n2 = h2;
+  for (let i = 0; i < 4; i++) {
+    part1 += CODE_CHARS[n1 % CODE_CHARS.length]; n1 = Math.floor(n1 / CODE_CHARS.length);
+    part2 += CODE_CHARS[n2 % CODE_CHARS.length]; n2 = Math.floor(n2 / CODE_CHARS.length);
+  }
+  return `LOGOS-${part1}-${part2}`;
+}
+
+function validateCode(inputCode, name) {
+  // Intenta validar el código contra los últimos 14 días (por si hubo demora)
+  const code = inputCode.trim().toUpperCase();
+  const today = new Date();
+  for (let d = 0; d <= 14; d++) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - d);
+    const dateStr = date.toISOString().slice(0,10).replace(/-/g,''); // YYYYMMDD
+    // También probar con fecha futura +1 (diferencia de zona horaria)
+    const dateFut = new Date(today);
+    dateFut.setDate(dateFut.getDate() + 1);
+    const dateStrFut = dateFut.toISOString().slice(0,10).replace(/-/g,'');
+
+    if (generateCode(name, dateStr) === code) return { valid: true, dateStr };
+    if (generateCode(name, dateStrFut) === code) return { valid: true, dateStr: dateStrFut };
+  }
+  return { valid: false };
+}
+
+// ── Navegación entre pasos ───────────────────────────────────────
+function showActivationStep() {
+  document.getElementById('paymentStep').classList.remove('visible');
+  document.getElementById('paymentStep').style.display = 'none';
+  document.getElementById('activationStep').style.display = 'block';
+  setTimeout(() => document.getElementById('activationCodeInput').focus(), 100);
+}
+
+function goBackToPayment() {
+  document.getElementById('activationStep').style.display = 'none';
+  document.getElementById('paymentStep').style.display = 'block';
+  document.getElementById('paymentStep').classList.add('visible');
+}
+
+// ── Validar código ingresado por el usuario ──────────────────────
+function validateActivationCode() {
+  const input = document.getElementById('activationCodeInput');
+  const errorDiv = document.getElementById('activationError');
+  const code = input.value.trim().toUpperCase();
+  const access = loadAccess();
+  const name = access?.name || document.getElementById('gateName').value.trim();
+
+  errorDiv.style.display = 'none';
+
+  if (!code || code.length < 10) {
+    showCodeError('Por favor ingresa el código completo (formato: LOGOS-XXXX-XXXX)');
+    return;
+  }
+  if (!name) {
+    showCodeError('No encontramos tu nombre. Por favor, comienza desde el primer paso.');
+    return;
+  }
+
+  const result = validateCode(code, name);
+
+  if (result.valid) {
+    // ¡Código válido! Activar acceso por 7 días
+    const now = Date.now();
+    const expiresAt = now + MONETIZE.DAYS_PAID * 24 * 60 * 60 * 1000;
+    saveAccess({ type: 'paid', name, email: access?.email || '', startedAt: now, expiresAt, code });
+    showActivationSuccess(name);
+  } else {
+    showCodeError('Código inválido o expirado. Verifica que lo hayas ingresado correctamente, o contáctanos por WhatsApp.');
+    input.style.borderColor = 'var(--crimson)';
+    input.style.boxShadow = '0 0 0 3px rgba(139,26,26,0.2)';
+    setTimeout(() => {
+      input.style.borderColor = '';
+      input.style.boxShadow = '';
+    }, 2500);
+  }
+}
+
+function showCodeError(msg) {
+  const errorDiv = document.getElementById('activationError');
+  errorDiv.textContent = '⚠ ' + msg;
+  errorDiv.style.display = 'block';
+}
+
+// ── Animación de éxito al activar ───────────────────────────────
+function showActivationSuccess(name) {
+  const overlay = document.createElement('div');
+  overlay.className = 'activate-success';
+  overlay.innerHTML = `
+    <div class="success-icon">✦</div>
+    <h2>¡Acceso Activado!</h2>
+    <p>Bienvenido/a, <strong>${name}</strong>. Tu suscripción de 7 días está activa.</p>
+    <div class="days-badge">✓ 7 DÍAS DE ACCESO COMPLETO</div>
+    <p style="font-size:0.82rem; color:var(--muted);">Ingresando en 3 segundos…</p>
+  `;
+  document.body.appendChild(overlay);
+  setTimeout(() => {
+    overlay.remove();
+    document.getElementById('accessGate').classList.add('hidden');
+    document.getElementById('expiredOverlay').classList.remove('visible');
+    // Re-enable inputs in case they were blocked
+    document.getElementById('queryInput').disabled = false;
+    document.getElementById('btnSend').disabled = false;
+    document.getElementById('queryInput').placeholder = 'Escribe tu consulta teológica...';
+  }, 3000);
+}
+
+// ── Enter en el input del código ────────────────────────────────
+document.getElementById('activationCodeInput')?.addEventListener('keydown', e => {
+  if (e.key === 'Enter') validateActivationCode();
+});
+
+// ── Botón "Ingresar código" desde el overlay de expirado ─────────
+function showUpgradeWithCode() {
+  document.getElementById('expiredOverlay').classList.remove('visible');
+  document.getElementById('accessGate').classList.remove('hidden');
+  const access = loadAccess();
+  if (access?.name)  document.getElementById('gateName').value  = access.name;
+  if (access?.email) document.getElementById('gateEmail').value = access.email;
+  // Ir directo al paso de activación
+  document.getElementById('planStep').classList.add('hidden');
+  document.getElementById('paymentStep').style.display = 'none';
+  document.getElementById('activationStep').style.display = 'block';
+}
+
+// ── Helpers de almacenamiento ────────────────────────────────────
+function saveAccess(data) {
+  try { localStorage.setItem(MONETIZE.STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
+}
+function loadAccess() {
+  try { return JSON.parse(localStorage.getItem(MONETIZE.STORAGE_KEY) || 'null'); } catch(e) { return null; }
+}
+
+// ── Estado del plan seleccionado ─────────────────────────────────
+let selectedPlan = 'trial';
+
+function selectPlan(plan) {
+  selectedPlan = plan;
+  document.getElementById('planTrial').classList.toggle('selected', plan === 'trial');
+  document.getElementById('planPago').classList.toggle('selected', plan === 'paid');
+  const btn = document.getElementById('gateMainBtn');
+  if (plan === 'trial') {
+    btn.textContent = 'Comenzar prueba gratuita — 1 día';
+  } else {
+    btn.textContent = 'Continuar al pago — $2.000 ARS';
+  }
+}
+
+// ── Acción principal del gate ────────────────────────────────────
+function handleGateAction() {
+  const name  = document.getElementById('gateName').value.trim();
+  const email = document.getElementById('gateEmail').value.trim();
+
+  if (!name) {
+    document.getElementById('gateName').focus();
+    document.getElementById('gateName').style.borderColor = 'var(--crimson)';
+    setTimeout(() => document.getElementById('gateName').style.borderColor = '', 1800);
+    return;
+  }
+  if (!email || !email.includes('@')) {
+    document.getElementById('gateEmail').focus();
+    document.getElementById('gateEmail').style.borderColor = 'var(--crimson)';
+    setTimeout(() => document.getElementById('gateEmail').style.borderColor = '', 1800);
+    return;
+  }
+
+  if (selectedPlan === 'trial') {
+    startTrial(name, email);
+  } else {
+    showPaymentStep(name, email);
+  }
+}
+
+// ── Iniciar prueba gratuita ──────────────────────────────────────
+function startTrial(name, email) {
+  const now      = Date.now();
+  const expiresAt = now + MONETIZE.TRIAL_HOURS * 60 * 60 * 1000;
+  saveAccess({ type: 'trial', name, email, startedAt: now, expiresAt });
+  closeGateAndStart('trial', name);
+}
+
+// ── Mostrar paso de pago ─────────────────────────────────────────
+function showPaymentStep(name, email) {
+  document.getElementById('planStep').classList.add('hidden');
+  document.getElementById('paymentStep').style.display = 'block';
+  document.getElementById('paymentStep').classList.add('visible');
+
+  // Generar el código que el admin deberá enviarle al usuario
+  const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
+  const codeForAdmin = generateCode(name, today);
+
+  // Build WhatsApp message
+  const msg = encodeURIComponent(
+    `Hola! Quiero activar mi acceso a LOGOS por 7 días.\n\n` +
+    `Nombre: ${name}\nCorreo: ${email}\nAlias usado: ${MONETIZE.ALIAS_MP}\n` +
+    `Monto: $${MONETIZE.PRICE_ARS} ARS\n\n` +
+    `Adjunto comprobante de pago.\n\n` +
+    `[Para el admin — código a enviar: ${codeForAdmin}]`
+  );
+  document.getElementById('whatsappConfirmBtn').href =
+    `https://wa.me/${MONETIZE.WA_NUMBER}?text=${msg}`;
+
+  // Store pending payment
+  saveAccess({ type: 'pending_payment', name, email, requestedAt: Date.now() });
+}
+
+function goBackToPlans() {
+  document.getElementById('planStep').classList.remove('hidden');
+  document.getElementById('paymentStep').classList.remove('visible');
+}
+
+// ── Copiar alias ─────────────────────────────────────────────────
+function copyAlias() {
+  navigator.clipboard.writeText(MONETIZE.ALIAS_MP).catch(() => {
+    const el = document.createElement('textarea');
+    el.value = MONETIZE.ALIAS_MP;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+  });
+  const btn = document.getElementById('copyAliasBtn');
+  btn.textContent = '✓ Copiado!';
+  btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = '📋 Copiar'; btn.classList.remove('copied'); }, 2500);
+}
+
+// ── Mostrar modal de upgrade desde banner/expirado ───────────────
+function showUpgrade() {
+  document.getElementById('expiredOverlay').classList.remove('visible');
+  document.getElementById('accessGate').classList.remove('hidden');
+  selectPlan('paid');
+  // Pre-fill name/email if known
+  const access = loadAccess();
+  if (access?.name)  document.getElementById('gateName').value  = access.name;
+  if (access?.email) document.getElementById('gateEmail').value = access.email;
+  handleGateAction(); // skip straight to payment
+}
+
+// ── Cerrar gate y arrancar la app ────────────────────────────────
+function closeGateAndStart(type, name) {
+  document.getElementById('accessGate').classList.add('hidden');
+  if (type === 'trial') {
+    document.getElementById('trialBanner').classList.add('visible');
+    document.body.classList.add('trial-active');
+    startTrialCountdown();
+  }
+}
+
+// ── Countdown del período de prueba ─────────────────────────────
+let countdownInterval = null;
+function startTrialCountdown() {
+  clearInterval(countdownInterval);
+  function tick() {
+    const access = loadAccess();
+    if (!access || !access.expiresAt) return;
+    const remaining = access.expiresAt - Date.now();
+    if (remaining <= 0) {
+      clearInterval(countdownInterval);
+      document.getElementById('trialBanner').classList.remove('visible');
+      document.getElementById('expiredOverlay').classList.add('visible');
+      // Block input
+      document.getElementById('queryInput').disabled = true;
+      document.getElementById('btnSend').disabled = true;
+      document.getElementById('queryInput').placeholder = 'Período de prueba finalizado. Activa tu suscripción.';
+      return;
+    }
+    const h = Math.floor(remaining / 3600000);
+    const m = Math.floor((remaining % 3600000) / 60000);
+    const s = Math.floor((remaining % 60000) / 1000);
+    document.getElementById('trialCountdown').textContent =
+      `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  }
+  tick();
+  countdownInterval = setInterval(tick, 1000);
+}
+
+// ── Verificar acceso al cargar ───────────────────────────────────
+function checkAccess() {
+  const access = loadAccess();
+
+  // No hay acceso guardado → mostrar gate
+  if (!access) {
+    document.getElementById('accessGate').classList.remove('hidden');
+    return;
+  }
+
+  // Pago pendiente → redirigir al pago
+  if (access.type === 'pending_payment') {
+    document.getElementById('accessGate').classList.remove('hidden');
+    document.getElementById('gateName').value  = access.name  || '';
+    document.getElementById('gateEmail').value = access.email || '';
+    // Show payment step directly
+    selectPlan('paid');
+    document.getElementById('planStep').classList.add('hidden');
+    document.getElementById('paymentStep').style.display = 'block';
+    document.getElementById('paymentStep').classList.add('visible');
+    const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
+    const codeForAdmin = generateCode(access.name || '', today);
+    const msg = encodeURIComponent(
+      `Hola! Quiero activar mi acceso a LOGOS.\nNombre: ${access.name}\nAlias: ${MONETIZE.ALIAS_MP}\n[Código a enviar: ${codeForAdmin}]`
+    );
+    document.getElementById('whatsappConfirmBtn').href = `https://wa.me/${MONETIZE.WA_NUMBER}?text=${msg}`;
+    return;
+  }
+
+  // Acceso de prueba activo
+  if (access.type === 'trial') {
+    const remaining = access.expiresAt - Date.now();
+    if (remaining > 0) {
+      document.getElementById('accessGate').classList.add('hidden');
+      closeGateAndStart('trial', access.name);
+    } else {
+      // Expirado
+      document.getElementById('accessGate').classList.add('hidden');
+      document.getElementById('expiredOverlay').classList.add('visible');
+      document.getElementById('queryInput').disabled = true;
+      document.getElementById('btnSend').disabled = true;
+    }
+    return;
+  }
+
+  // Acceso pago activo (admin confirma cambiando type a 'paid')
+  if (access.type === 'paid') {
+    const remaining = access.expiresAt - Date.now();
+    if (remaining > 0) {
+      document.getElementById('accessGate').classList.add('hidden');
+    } else {
+      document.getElementById('accessGate').classList.remove('hidden');
+    }
+    return;
+  }
+
+  // Fallback → mostrar gate
+  document.getElementById('accessGate').classList.remove('hidden');
+}
+
+// Arrancar verificación al cargar
+checkAccess();
+document.querySelector('.sidebar').addEventListener('touchstart', e => {
+  touchStartX = e.touches[0].clientX;
+}, { passive: true });
+document.querySelector('.sidebar').addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (dx < -60) closeSidebar();
+}, { passive: true });
+</script>
+</body>
+</html>
