@@ -11,8 +11,3 @@ Esto simula un servidor real y la API funcionará correctamente.
 
 ---
 
-### ✅ Opción 2 — Subir a GitHub + Vercel (permanente)
-
-Que es lo que ya estábamos haciendo. Una vez en Vercel, la app estará en una URL real como:
-```
-https://logos-teologico.vercel.app
