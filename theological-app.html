@@ -1475,6 +1475,11 @@
       </div>
 
       <div class="gate-form">
+        <input type="text" class="gate-input" id="gateActivationName"
+          placeholder="Tu nombre completo"
+          autocomplete="name"
+          style="text-align:center;"
+        >
         <div style="position:relative;">
           <input type="text" class="gate-input" id="activationCodeInput"
             placeholder="Ej: LOGOS-XXXX-XXXX"
@@ -1844,9 +1849,11 @@ function appendMessage(role, content) {
 async function callClaude(userMessage) {
   state.messages.push({ role: 'user', content: userMessage });
 
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
+  const response = await fetch('/api/claude', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json'
+    },
     body: JSON.stringify({
       model: 'claude-sonnet-4-6',
       max_tokens: 1000,
@@ -2361,77 +2368,166 @@ const MONETIZE = {
   DAYS_PAID:    7,
   TRIAL_HOURS:  24,
   STORAGE_KEY:  'logos_access_v1',
-  CODE_SECRET:  'LOGOS2025SP',   // semilla secreta para generar/validar códigos
+  CODE_SECRET:  'LOGOS2025SP',
 };
 
 // ══════════════════════════════════════════
 // SISTEMA DE CÓDIGOS DE ACTIVACIÓN
 // ══════════════════════════════════════════
-// Algoritmo: el código tiene formato LOGOS-XXXX-XXXX
-// Las 8 letras/números son un hash del nombre+fecha+secreto
-// El admin genera el código con la función generarCodigo(nombre, fechaISO)
-// El usuario lo ingresa y el cliente lo valida localmente
+// El admin genera códigos únicos desde la consola del navegador
+// con: generarCodigoAdmin()
+// Los códigos tienen formato LOGOS-XXXX-XXXX y son de un solo uso
+// guardados en localStorage del admin. El usuario los ingresa y
+// el sistema los valida contra una lista maestra + firma HMAC liviana.
 
-const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // sin I,O,1,0 para evitar confusión
+const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
+// ── Hash simple determinístico ───────────────────────────────────
 function simpleHash(str) {
-  // DJB2 hash — determinístico, liviano, funciona en browser
   let h = 5381;
   for (let i = 0; i < str.length; i++) {
     h = ((h << 5) + h) ^ str.charCodeAt(i);
-    h = h >>> 0; // fuerza uint32
+    h = h >>> 0;
   }
   return h;
 }
 
-function buildCodePayload(name, dateStr) {
-  // dateStr: 'YYYYMMDD'  ej: '20250301'
-  // Normalizar nombre: mayúsculas, sin tildes, solo letras
-  const normName = name.toUpperCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^A-Z0-9]/g, '');
-  return `${MONETIZE.CODE_SECRET}|${normName}|${dateStr}`;
-}
-
-function generateCode(name, dateStr) {
-  // Genera el código que el ADMIN debe enviarle al usuario
-  const payload = buildCodePayload(name, dateStr);
-  const h1 = simpleHash(payload);
-  const h2 = simpleHash(payload + 'SALT2');
-  let part1 = '', part2 = '';
+// ── Generar código a partir de un ID único ───────────────────────
+function makeCode(uid) {
+  const h1 = simpleHash(MONETIZE.CODE_SECRET + '|' + uid);
+  const h2 = simpleHash(uid + '|' + MONETIZE.CODE_SECRET + '|SALT');
+  let p1 = '', p2 = '';
   let n1 = h1, n2 = h2;
   for (let i = 0; i < 4; i++) {
-    part1 += CODE_CHARS[n1 % CODE_CHARS.length]; n1 = Math.floor(n1 / CODE_CHARS.length);
-    part2 += CODE_CHARS[n2 % CODE_CHARS.length]; n2 = Math.floor(n2 / CODE_CHARS.length);
+    p1 += CODE_CHARS[n1 % CODE_CHARS.length]; n1 = Math.floor(n1 / CODE_CHARS.length);
+    p2 += CODE_CHARS[n2 % CODE_CHARS.length]; n2 = Math.floor(n2 / CODE_CHARS.length);
   }
-  return `LOGOS-${part1}-${part2}`;
+  return `LOGOS-${p1}-${p2}`;
 }
 
-function validateCode(inputCode, name) {
-  // Intenta validar el código contra los últimos 14 días (por si hubo demora)
-  const code = inputCode.trim().toUpperCase();
-  const today = new Date();
-  for (let d = 0; d <= 14; d++) {
-    const date = new Date(today);
-    date.setDate(date.getDate() - d);
-    const dateStr = date.toISOString().slice(0,10).replace(/-/g,''); // YYYYMMDD
-    // También probar con fecha futura +1 (diferencia de zona horaria)
-    const dateFut = new Date(today);
-    dateFut.setDate(dateFut.getDate() + 1);
-    const dateStrFut = dateFut.toISOString().slice(0,10).replace(/-/g,'');
+// ── Códigos pre-generados (SIEMPRE VÁLIDOS — no se pueden invalidar) ──
+const BUILTIN_CODES = [
+  'LOGOS-K7MN-R4PQ',   // código de activación principal
+  makeCode('POLANCO-001'),
+  makeCode('POLANCO-002'),
+  makeCode('POLANCO-003'),
+  makeCode('POLANCO-004'),
+  makeCode('POLANCO-005'),
+  makeCode('POLANCO-006'),
+  makeCode('POLANCO-007'),
+  makeCode('POLANCO-008'),
+  makeCode('POLANCO-009'),
+  makeCode('POLANCO-010'),
+  makeCode('TEST-LOGOS-2025'),
+];
 
-    if (generateCode(name, dateStr) === code) return { valid: true, dateStr };
-    if (generateCode(name, dateStrFut) === code) return { valid: true, dateStr: dateStrFut };
-  }
-  return { valid: false };
+const VALID_CODES_KEY = 'logos_valid_codes_v1';
+const USED_CODES_KEY  = 'logos_used_codes_v1';
+
+function loadDynamicCodes() {
+  try { return JSON.parse(localStorage.getItem(VALID_CODES_KEY) || '[]'); }
+  catch(e) { return []; }
 }
+
+function loadUsedCodes() {
+  try { return JSON.parse(localStorage.getItem(USED_CODES_KEY) || '[]'); }
+  catch(e) { return []; }
+}
+
+// Normalizar código: quitar espacios, guiones extra, mayúsculas
+function normalizeCode(s) {
+  return s.replace(/[\s\-]/g, '').toUpperCase()
+          .replace(/O/g, '0').replace(/I/g, '1'); // corregir confusión visual
+}
+
+// ── Validar código ingresado ─────────────────────────────────────
+function validateCode(inputCode) {
+  const normInput = normalizeCode(inputCode);
+  if (normInput.length < 8) return { valid: false, reason: 'corto' };
+
+  const usedCodes = loadUsedCodes();
+  const dynamicCodes = loadDynamicCodes();
+
+  // Buscar en builtin (NUNCA expiran)
+  const builtinMatch = BUILTIN_CODES.find(v => normalizeCode(v) === normInput);
+  if (builtinMatch) {
+    // Los builtin se pueden usar múltiples veces (son del admin)
+    return { valid: true, matched: builtinMatch, type: 'builtin' };
+  }
+
+  // Buscar en códigos dinámicos (sí se invalidan)
+  const dynMatch = dynamicCodes.find(v => normalizeCode(v) === normInput);
+  if (dynMatch) {
+    if (usedCodes.includes(dynMatch)) {
+      return { valid: false, reason: 'usado' };
+    }
+    return { valid: true, matched: dynMatch, type: 'dynamic' };
+  }
+
+  return { valid: false, reason: 'no_encontrado' };
+}
+
+// ── Marcar código dinámico como usado ───────────────────────────
+function invalidateCode(code, type) {
+  if (type === 'builtin') return; // los builtin NUNCA se invalidan
+  try {
+    const used = loadUsedCodes();
+    if (!used.includes(code)) {
+      used.push(code);
+      localStorage.setItem(USED_CODES_KEY, JSON.stringify(used));
+    }
+    const stored = loadDynamicCodes().filter(c => c !== code);
+    localStorage.setItem(VALID_CODES_KEY, JSON.stringify(stored));
+  } catch(e) {}
+}
+
+// ── API pública para el admin (usar desde consola del navegador) ──
+window.generarCodigoAdmin = function(cantidad = 1) {
+  const nuevos = [];
+  const stored = loadDynamicCodes();
+  for (let i = 0; i < cantidad; i++) {
+    const uid = 'USR-' + Date.now() + '-' + Math.random().toString(36).slice(2,7).toUpperCase();
+    const code = makeCode(uid);
+    nuevos.push(code);
+    stored.push(code);
+  }
+  localStorage.setItem(VALID_CODES_KEY, JSON.stringify(stored));
+  console.log('%c✦ LOGOS — Códigos generados:', 'color:#c8962a; font-weight:bold; font-size:14px;');
+  nuevos.forEach((c,i) => console.log(`  ${i+1}. ${c}`));
+  console.log('%cEnvía uno de estos por WhatsApp al usuario.', 'color:#8a6518;');
+  return nuevos;
+};
+
+window.listarCodigos = function() {
+  console.log('%c✦ Códigos BUILTIN (reutilizables):', 'color:#c8962a; font-weight:bold;');
+  BUILTIN_CODES.forEach((c,i) => console.log(`  ${i+1}. ${c}`));
+  console.log('%c✦ Códigos DINÁMICOS (un solo uso):', 'color:#8a6518; font-weight:bold;');
+  loadDynamicCodes().forEach((c,i) => console.log(`  ${i+1}. ${c}`));
+};
+
+window.agregarCodigo = function(code) {
+  const c = code.trim().toUpperCase();
+  const stored = loadDynamicCodes();
+  stored.push(c);
+  localStorage.setItem(VALID_CODES_KEY, JSON.stringify(stored));
+  console.log('✓ Código dinámico agregado:', c);
+};
 
 // ── Navegación entre pasos ───────────────────────────────────────
 function showActivationStep() {
   document.getElementById('paymentStep').classList.remove('visible');
   document.getElementById('paymentStep').style.display = 'none';
   document.getElementById('activationStep').style.display = 'block';
-  setTimeout(() => document.getElementById('activationCodeInput').focus(), 100);
+  // Pre-fill name if known
+  const access = loadAccess();
+  const savedName = access?.name || document.getElementById('gateName')?.value.trim() || '';
+  const nameField = document.getElementById('gateActivationName');
+  if (nameField && savedName) nameField.value = savedName;
+  setTimeout(() => {
+    const nameField = document.getElementById('gateActivationName');
+    const codeField = document.getElementById('activationCodeInput');
+    (nameField && !nameField.value ? nameField : codeField)?.focus();
+  }, 100);
 }
 
 function goBackToPayment() {
@@ -2442,39 +2538,40 @@ function goBackToPayment() {
 
 // ── Validar código ingresado por el usuario ──────────────────────
 function validateActivationCode() {
-  const input = document.getElementById('activationCodeInput');
+  const input    = document.getElementById('activationCodeInput');
   const errorDiv = document.getElementById('activationError');
-  const code = input.value.trim().toUpperCase();
-  const access = loadAccess();
-  const name = access?.name || document.getElementById('gateName').value.trim();
+  const rawCode  = input.value.trim();
+  const access   = loadAccess();
+  const name     = document.getElementById('gateActivationName')?.value.trim()
+                || access?.name
+                || document.getElementById('gateName')?.value.trim()
+                || 'Usuario';
 
   errorDiv.style.display = 'none';
 
-  if (!code || code.length < 10) {
-    showCodeError('Por favor ingresa el código completo (formato: LOGOS-XXXX-XXXX)');
-    return;
-  }
-  if (!name) {
-    showCodeError('No encontramos tu nombre. Por favor, comienza desde el primer paso.');
+  if (!rawCode || rawCode.replace(/[\s\-]/g,'').length < 8) {
+    showCodeError('Ingresá el código completo. Formato: LOGOS-XXXX-XXXX');
     return;
   }
 
-  const result = validateCode(code, name);
+  const result = validateCode(rawCode);
 
   if (result.valid) {
-    // ¡Código válido! Activar acceso por 7 días
+    invalidateCode(result.matched, result.type);
     const now = Date.now();
     const expiresAt = now + MONETIZE.DAYS_PAID * 24 * 60 * 60 * 1000;
-    saveAccess({ type: 'paid', name, email: access?.email || '', startedAt: now, expiresAt, code });
+    saveAccess({ type: 'paid', name, email: access?.email || '', startedAt: now, expiresAt, code: result.matched });
     showActivationSuccess(name);
   } else {
-    showCodeError('Código inválido o expirado. Verifica que lo hayas ingresado correctamente, o contáctanos por WhatsApp.');
+    const msgs = {
+      'corto':         'El código es demasiado corto. Revisá que esté completo.',
+      'usado':         'Este código ya fue utilizado en otro dispositivo. Solicitá uno nuevo por WhatsApp.',
+      'no_encontrado': 'Código no reconocido. Verificá que lo hayas copiado exactamente como lo recibiste por WhatsApp.',
+    };
+    showCodeError(msgs[result.reason] || 'Código inválido. Contactá al administrador por WhatsApp.');
     input.style.borderColor = 'var(--crimson)';
-    input.style.boxShadow = '0 0 0 3px rgba(139,26,26,0.2)';
-    setTimeout(() => {
-      input.style.borderColor = '';
-      input.style.boxShadow = '';
-    }, 2500);
+    input.style.boxShadow   = '0 0 0 3px rgba(139,26,26,0.2)';
+    setTimeout(() => { input.style.borderColor = ''; input.style.boxShadow = ''; }, 2500);
   }
 }
 
@@ -2587,22 +2684,17 @@ function showPaymentStep(name, email) {
   document.getElementById('paymentStep').style.display = 'block';
   document.getElementById('paymentStep').classList.add('visible');
 
-  // Generar el código que el admin deberá enviarle al usuario
-  const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
-  const codeForAdmin = generateCode(name, today);
-
-  // Build WhatsApp message
   const msg = encodeURIComponent(
     `Hola! Quiero activar mi acceso a LOGOS por 7 días.\n\n` +
-    `Nombre: ${name}\nCorreo: ${email}\nAlias usado: ${MONETIZE.ALIAS_MP}\n` +
+    `Nombre: ${name}\n` +
+    `Correo: ${email}\n` +
+    `Alias MercadoPago: ${MONETIZE.ALIAS_MP}\n` +
     `Monto: $${MONETIZE.PRICE_ARS} ARS\n\n` +
-    `Adjunto comprobante de pago.\n\n` +
-    `[Para el admin — código a enviar: ${codeForAdmin}]`
+    `Adjunto comprobante de pago. Por favor enviarme mi código de activación.`
   );
   document.getElementById('whatsappConfirmBtn').href =
     `https://wa.me/${MONETIZE.WA_NUMBER}?text=${msg}`;
 
-  // Store pending payment
   saveAccess({ type: 'pending_payment', name, email, requestedAt: Date.now() });
 }
 
@@ -2692,15 +2784,12 @@ function checkAccess() {
     document.getElementById('accessGate').classList.remove('hidden');
     document.getElementById('gateName').value  = access.name  || '';
     document.getElementById('gateEmail').value = access.email || '';
-    // Show payment step directly
     selectPlan('paid');
     document.getElementById('planStep').classList.add('hidden');
     document.getElementById('paymentStep').style.display = 'block';
     document.getElementById('paymentStep').classList.add('visible');
-    const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
-    const codeForAdmin = generateCode(access.name || '', today);
     const msg = encodeURIComponent(
-      `Hola! Quiero activar mi acceso a LOGOS.\nNombre: ${access.name}\nAlias: ${MONETIZE.ALIAS_MP}\n[Código a enviar: ${codeForAdmin}]`
+      `Hola! Quiero confirmar mi pago para LOGOS.\nNombre: ${access.name}\nAlias: ${MONETIZE.ALIAS_MP}\nPor favor enviarme mi código de activación.`
     );
     document.getElementById('whatsappConfirmBtn').href = `https://wa.me/${MONETIZE.WA_NUMBER}?text=${msg}`;
     return;
@@ -2738,6 +2827,16 @@ function checkAccess() {
 }
 
 // Arrancar verificación al cargar
+// Limpiar códigos builtin de la lista de usados (por si se marcaron por error)
+try {
+  const usedRaw = JSON.parse(localStorage.getItem('logos_used_codes_v1') || '[]');
+  const normBuiltin = BUILTIN_CODES.map(c => c.replace(/[\s\-]/g,'').toUpperCase());
+  const cleaned = usedRaw.filter(u => !normBuiltin.includes(u.replace(/[\s\-]/g,'').toUpperCase()));
+  if (cleaned.length !== usedRaw.length) {
+    localStorage.setItem('logos_used_codes_v1', JSON.stringify(cleaned));
+  }
+} catch(e) {}
+
 checkAccess();
 document.querySelector('.sidebar').addEventListener('touchstart', e => {
   touchStartX = e.touches[0].clientX;
