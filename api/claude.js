@@ -9,6 +9,7 @@ export default async function handler(req, res) {
   }
 
   try {
+    const bodyText = JSON.stringify(req.body);
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -16,12 +17,15 @@ export default async function handler(req, res) {
         'x-api-key': apiKey,
         'anthropic-version': '2023-06-01'
       },
-      body: JSON.stringify(req.body)
+      body: bodyText
     });
 
-    const data = await response.json();
+    const text = await response.text();
+    let data;
+    try { data = JSON.parse(text); } catch(e) { data = { raw: text }; }
+
     return res.status(response.status).json(data);
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message, stack: err.stack });
   }
 }
