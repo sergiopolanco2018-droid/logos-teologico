@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -1630,7 +1631,7 @@
     </div>
 
     <div class="token-info">
-      <div class="token-badge">🔮 Modelo: <span class="model-name">claude-haiku-4-5-20251001</span></div>
+      <div class="token-badge">🔮 Modelo: <span class="model-name">claude-sonnet-4-5</span></div>
       <div class="token-badge" id="tokenCount">Tokens: —</div>
     </div>
 
@@ -1855,7 +1856,7 @@ async function callClaude(userMessage) {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      model: 'claude-haiku-4-5-20251001',
+      model: 'claude-sonnet-4-5',
       max_tokens: 1000,
       system: buildSystemPrompt(),
       messages: state.messages
@@ -1902,7 +1903,7 @@ async function sendMessage() {
     appendMessage('assistant', reply);
   } catch (err) {
     indicator.classList.remove('visible');
-    appendMessage('assistant', `⚠ *Error de conexión*: ${err.message}\n\nVerifica tu clave de API de Anthropic. La aplicación usa el modelo **claude-haiku-4-5-20251001** a través de la API de Anthropic.`);
+    appendMessage('assistant', `⚠ *Error de conexión*: ${err.message}\n\nVerifica tu clave de API de Anthropic. La aplicación usa el modelo **claude-sonnet-4-5** a través de la API de Anthropic.`);
   }
 
   state.isLoading = false;
