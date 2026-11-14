@@ -83,7 +83,7 @@
 
     <h3>Consulta real de fuentes</h3>
     <div class="web-box">
-      <label class="chk"><input type="checkbox" id="web" checked> 🌐 Buscar en fuentes en línea</label>
+      <label class="chk"><input type="checkbox" id="web"> 🌐 Buscar en fuentes en línea</label>
     </div>
     <div class="note">Busca en egwwritings.org, adventistas.org y sitios bíblicos antes de responder.</div>
 
@@ -190,9 +190,11 @@ Enfoque de fuentes:
 ${srcs || '- La Biblia'}
 
 Instrucciones:
-- Responde en español, con estilo académico pero claro.
-- Para términos hebreos (AT): da la palabra en hebreo con vocales (niqqud), transliteración, raíz, significado y uso bíblico.
-- Para términos griegos (NT): da la palabra en griego, transliteración, uso en el NT y la LXX, y la perspectiva adventista.
+- Responde en español, con estilo académico pero accesible. Da respuestas COMPLETAS y DETALLADAS, de varios párrafos; no resumas ni abrevies.
+- Estructura la respuesta con estos apartados (usa títulos con ##): 1) Introducción breve, 2) Análisis lingüístico (si hay términos originales), 3) Textos bíblicos clave, 4) Perspectiva del Comentario Bíblico Adventista y del Diccionario Adventista, 5) Implicaciones doctrinales y aplicación, 6) Conclusión.
+- Para términos hebreos (AT): presenta la palabra en caracteres hebreos con vocales (niqqud), su transliteración, la raíz verbal (shoresh), la forma morfológica, el significado base y su rango semántico, y al menos 3 pasajes donde aparece con su referencia exacta. Indica cómo la traduce la Septuaginta (LXX) cuando sea relevante.
+- Para términos griegos (NT): presenta la palabra en caracteres griegos, su transliteración, la forma gramatical (caso, tiempo, voz o modo), su etimología, su uso en el NT y en la LXX, al menos 3 pasajes con referencia exacta, y la perspectiva adventista.
+- Compara con otros términos de campo semántico cercano cuando ayude a entender el matiz (por ejemplo, distintos términos para "amor", "alma" o "pecado").
 - Escribe siempre las palabras originales en caracteres hebreos o griegos, para que la app pueda reproducir su pronunciación.
 - Cita versículos como **Libro Cap:Vers** (RVR60).
 - Distingue claramente entre lo que proviene de los textos de referencia o de la búsqueda en línea, y lo que es conocimiento general tuyo. Si no puedes verificar una cita del Comentario Bíblico Adventista o del Diccionario, dilo; no inventes citas textuales ni números de página.
@@ -297,7 +299,7 @@ async function send(text) {
   chat.scrollTop = chat.scrollHeight;
 
   const useWeb = document.getElementById('web').checked;
-  const body = { model:MODEL, max_tokens:2000, system:systemPrompt(), messages:history };
+  const body = { model:MODEL, max_tokens:4000, system:systemPrompt(), messages:history };
   if (useWeb) body.tools = [{ type:'web_search_20250305', name:'web_search', max_uses:3, allowed_domains:WEB_DOMAINS }];
 
   try {
@@ -315,6 +317,7 @@ async function send(text) {
     let badges = '';
     if (searched) badges += '<br><span class="badge">🌐 CONSULTÓ FUENTES EN LÍNEA</span> ';
     if (refs.length) badges += '<span class="badge">📎 USÓ TUS REFERENCIAS</span>';
+    if (data.stop_reason === 'max_tokens') badges += '<br><span class="badge">⚠ RESPUESTA CORTADA · escribe "continúa"</span>';
     add('bot', md(reply) + badges);
   } catch (e) {
     history.pop();
