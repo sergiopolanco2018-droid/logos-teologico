@@ -13,14 +13,27 @@
   header h1 { font-family:'Cinzel',serif; color:var(--gold-l); letter-spacing:.2em; font-size:1.8rem; }
   header p { font-family:'Cinzel',serif; font-size:.7rem; letter-spacing:.25em; color:var(--gold-d); margin-top:.3rem; text-transform:uppercase; }
   .team { font-size:.8rem; color:var(--muted); margin-top:.4rem; font-style:italic; }
-  main { flex:1; display:grid; grid-template-columns:250px 1fr; min-height:0; }
+  main { flex:1; display:grid; grid-template-columns:270px 1fr; min-height:0; }
   aside { background:var(--panel); border-right:1px solid var(--border); padding:1rem; overflow-y:auto; }
-  aside h3 { font-family:'Cinzel',serif; font-size:.7rem; letter-spacing:.2em; color:var(--gold-d); margin:.8rem 0 .5rem; text-transform:uppercase; }
-  aside label { display:flex; gap:.5rem; align-items:center; padding:.35rem .5rem; font-size:.95rem; cursor:pointer; border:1px solid transparent; border-radius:3px; }
-  aside label:hover { border-color:var(--border); }
+  aside h3 { font-family:'Cinzel',serif; font-size:.7rem; letter-spacing:.2em; color:var(--gold-d); margin:.9rem 0 .5rem; text-transform:uppercase; }
+  aside h3:first-child { margin-top:0; }
+  aside label.chk { display:flex; gap:.5rem; align-items:center; padding:.35rem .5rem; font-size:.95rem; cursor:pointer; border:1px solid transparent; border-radius:3px; }
+  aside label.chk:hover { border-color:var(--border); }
+  .note { font-size:.75rem; color:var(--muted); font-style:italic; line-height:1.4; margin:.3rem 0 0 .2rem; }
   .pills { display:flex; flex-wrap:wrap; gap:.4rem; }
   .pill { padding:.25rem .7rem; border:1px solid var(--border); background:none; color:var(--muted); font-family:inherit; font-size:.9rem; cursor:pointer; border-radius:3px; }
   .pill.on { background:var(--gold-d); color:#fff; border-color:var(--gold-d); }
+  .voice-status { font-size:.85rem; color:var(--muted); line-height:1.7; }
+  .voice-status .ok { color:#7fae5a; }
+  .voice-status .no { color:#c45a5a; }
+  .web-box { border:1px solid var(--border); border-radius:3px; background:rgba(200,150,42,.05); }
+  .upload { display:block; text-align:center; padding:.5rem; border:1px dashed var(--gold-d); border-radius:3px; color:var(--gold); font-size:.9rem; cursor:pointer; }
+  .upload:hover { background:rgba(200,150,42,.1); }
+  .upload input { display:none; }
+  .ref { display:flex; align-items:center; gap:.4rem; font-size:.8rem; padding:.3rem .5rem; margin-top:.3rem; border:1px solid var(--border); border-radius:3px; background:rgba(61,82,41,.2); }
+  .ref span { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .ref button { background:none; border:none; color:var(--muted); cursor:pointer; }
+  .ref button:hover { color:#c45a5a; }
   section { display:flex; flex-direction:column; min-height:0; }
   #chat { flex:1; overflow-y:auto; padding:1.5rem; display:flex; flex-direction:column; gap:1rem; }
   .welcome { text-align:center; margin:auto; max-width:520px; }
@@ -36,13 +49,19 @@
   .msg h3 { font-family:'Cinzel',serif; color:var(--gold-l); font-size:1rem; margin:.6rem 0 .3rem; }
   .msg blockquote { border-left:3px solid var(--gold-d); padding-left:.8rem; margin:.5rem 0; color:var(--muted); font-style:italic; }
   .msg ul { padding-left:1.4rem; }
+  .badge { display:inline-block; font-size:.7rem; font-family:'Cinzel',serif; letter-spacing:.08em; color:var(--gold); border:1px solid var(--border); border-radius:2px; padding:0 .4rem; margin-top:.6rem; }
   .typing { color:var(--muted); font-style:italic; align-self:flex-start; display:none; }
-  form-row, .row { display:flex; gap:.6rem; padding:1rem 1.5rem; border-top:1px solid var(--border); }
+  .row { display:flex; gap:.6rem; padding:1rem 1.5rem; border-top:1px solid var(--border); }
   textarea { flex:1; background:rgba(245,234,208,.05); border:1px solid var(--border); color:#f5ead0; font-family:inherit; font-size:1.05rem; padding:.7rem; border-radius:3px; resize:none; outline:none; height:52px; }
   textarea:focus { border-color:var(--gold-d); }
   #send { width:52px; border:none; background:linear-gradient(135deg,var(--gold-d),var(--gold)); color:#fff; font-size:1.2rem; cursor:pointer; border-radius:3px; }
   #send:disabled { opacity:.5; cursor:not-allowed; }
-  @media (max-width:760px) { main { grid-template-columns:1fr; grid-template-rows:auto 1fr; } aside { max-height:170px; border-right:none; border-bottom:1px solid var(--border); } }
+  .bw { color:var(--gold-l); font-size:1.15em; white-space:nowrap; }
+  .speak { display:inline-block; background:none; border:1px solid rgba(200,150,42,.35); border-radius:3px; color:var(--gold); font-size:.75rem; padding:0 .3rem; margin:0 .2rem; cursor:pointer; vertical-align:middle; line-height:1.4; }
+  .speak:hover { background:rgba(200,150,42,.15); border-color:var(--gold-l); }
+  .speak.playing { background:rgba(200,150,42,.25); color:#fff; }
+  #toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%); background:#2a1c0a; border:1px solid var(--gold-d); color:var(--text); padding:.6rem 1rem; border-radius:3px; font-size:.9rem; display:none; max-width:90%; text-align:center; z-index:10; }
+  @media (max-width:760px) { main { grid-template-columns:1fr; grid-template-rows:auto 1fr; } aside { max-height:220px; border-right:none; border-bottom:1px solid var(--border); } }
 </style>
 </head>
 <body>
@@ -54,12 +73,28 @@
 
 <main>
   <aside>
-    <h3>Fuentes activas</h3>
-    <label><input type="checkbox" checked data-src="La Santa Biblia (Reina-Valera 1960 como referencia principal)"> 📖 La Santa Biblia</label>
-    <label><input type="checkbox" checked data-src="El Comentario Bíblico Adventista (CBA)"> 📚 Com. Bíblico Adventista</label>
-    <label><input type="checkbox" checked data-src="El Diccionario Bíblico Adventista"> 📘 Diccionario Adventista</label>
-    <label><input type="checkbox" checked data-src="Léxicos de Hebreo Bíblico (BDB, HALOT) para el Antiguo Testamento"> א Léxico Hebreo</label>
-    <label><input type="checkbox" checked data-src="Léxicos de Griego Koiné (BDAG, Thayer) para el Nuevo Testamento"> α Léxico Griego</label>
+    <h3>Enfoque de las fuentes</h3>
+    <label class="chk"><input type="checkbox" checked data-src="La Santa Biblia (Reina-Valera 1960 como referencia principal)"> 📖 La Santa Biblia</label>
+    <label class="chk"><input type="checkbox" checked data-src="El Comentario Bíblico Adventista (CBA)"> 📚 Com. Bíblico Adventista</label>
+    <label class="chk"><input type="checkbox" checked data-src="El Diccionario Bíblico Adventista"> 📘 Diccionario Adventista</label>
+    <label class="chk"><input type="checkbox" checked data-src="Léxicos de Hebreo Bíblico (BDB, HALOT) para el Antiguo Testamento"> א Léxico Hebreo</label>
+    <label class="chk"><input type="checkbox" checked data-src="Léxicos de Griego Koiné (BDAG, Thayer) para el Nuevo Testamento"> α Léxico Griego</label>
+    <div class="note">Estas casillas orientan la respuesta. Para consultar textos reales, usa las dos opciones de abajo.</div>
+
+    <h3>Consulta real de fuentes</h3>
+    <div class="web-box">
+      <label class="chk"><input type="checkbox" id="web" checked> 🌐 Buscar en fuentes en línea</label>
+    </div>
+    <div class="note">Busca en egwwritings.org, adventistas.org y sitios bíblicos antes de responder.</div>
+
+    <div style="margin-top:.7rem">
+      <label class="upload">📎 Agregar textos de referencia (.txt / .md)
+        <input type="file" id="files" accept=".txt,.md,text/plain,text/markdown" multiple>
+      </label>
+      <div id="refList"></div>
+      <div class="note">Sube fragmentos del CBA, del Diccionario u otros que tengas. Claude los usará y los citará por nombre.</div>
+    </div>
+
     <h3>Modo de idioma</h3>
     <div class="pills" id="langs">
       <button class="pill on" data-l="Automático: detecta si la consulta es de Hebreo (AT) o Griego (NT)">Auto</button>
@@ -67,13 +102,20 @@
       <button class="pill" data-l="Enfoque en Griego y Nuevo Testamento">Griego</button>
       <button class="pill" data-l="Ambos idiomas bíblicos">Ambos</button>
     </div>
+
+    <h3>🔊 Audio</h3>
+    <div class="voice-status" id="voiceStatus">Buscando voces…</div>
+    <div class="pills" style="margin-top:.5rem">
+      <button class="pill" id="slow">Velocidad: lenta</button>
+    </div>
+    <div class="note" id="voiceHelp"></div>
   </aside>
 
   <section>
     <div id="chat">
       <div class="welcome" id="welcome">
         <h2>Consulta Teológica Adventista</h2>
-        <p>Consulta sobre la Biblia, el Comentario Bíblico Adventista y el Diccionario Adventista, con análisis de términos en hebreo y griego.</p>
+        <p>Consulta sobre la Biblia, el Comentario Bíblico Adventista y el Diccionario Adventista. Las palabras en hebreo y griego incluyen un botón 🔊 para escuchar su pronunciación.</p>
         <div class="quick">
           <button>¿Qué significa שָׁלוֹם (shalom)?</button>
           <button>Explica ἀγάπη (agape) en el NT</button>
@@ -89,11 +131,17 @@
     </div>
   </section>
 </main>
+<div id="toast"></div>
 
 <script>
 const API_URL = '/api/claude';
 const MODEL = 'claude-sonnet-5-5';
+const WEB_DOMAINS = ['egwwritings.org','adventistas.org','adventist.org','biblegateway.com','biblehub.com','blueletterbible.org'];
+const MAX_FILE_CHARS = 20000;
+const MAX_TOTAL_CHARS = 60000;
+
 let history = [];
+let refs = [];            // {name, text}
 let busy = false;
 let langMode = document.querySelector('.pill.on').dataset.l;
 
@@ -102,24 +150,70 @@ const typing = document.getElementById('typing');
 const input = document.getElementById('q');
 const sendBtn = document.getElementById('send');
 
+/* ───────── Referencias subidas por el usuario ───────── */
+function renderRefs() {
+  document.getElementById('refList').innerHTML = refs.map((r, i) =>
+    `<div class="ref"><span title="${esc(r.name)}">📄 ${esc(r.name)}</span><button data-i="${i}" title="Quitar">✕</button></div>`
+  ).join('');
+}
+document.getElementById('refList').addEventListener('click', e => {
+  const b = e.target.closest('button[data-i]');
+  if (b) { refs.splice(+b.dataset.i, 1); renderRefs(); }
+});
+document.getElementById('files').addEventListener('change', async e => {
+  for (const f of e.target.files) {
+    let text = await f.text();
+    const total = refs.reduce((n, r) => n + r.text.length, 0);
+    if (total + Math.min(text.length, MAX_FILE_CHARS) > MAX_TOTAL_CHARS) {
+      toast('Se alcanzó el límite de texto de referencia. Quita algún archivo e intenta de nuevo.');
+      break;
+    }
+    if (text.length > MAX_FILE_CHARS) {
+      text = text.slice(0, MAX_FILE_CHARS);
+      toast(`"${f.name}" era muy largo: se usaron los primeros ${MAX_FILE_CHARS.toLocaleString()} caracteres.`);
+    }
+    refs.push({ name: f.name, text });
+  }
+  e.target.value = '';
+  renderRefs();
+});
+
+/* ───────── Prompt ───────── */
 function systemPrompt() {
   const srcs = [...document.querySelectorAll('[data-src]:checked')].map(c => '- ' + c.dataset.src).join('\n');
+  const refBlock = refs.length
+    ? '\n\nTEXTOS DE REFERENCIA APORTADOS POR EL USUARIO (priorízalos y cítalos por nombre de archivo):\n' +
+      refs.map(r => `=== ${r.name} ===\n${r.text}`).join('\n\n')
+    : '';
   return `Eres LOGOS, asistente teológico para estudiantes adventistas del séptimo día.
-Fuentes a considerar:
+Enfoque de fuentes:
 ${srcs || '- La Biblia'}
 
 Instrucciones:
 - Responde en español, con estilo académico pero claro.
-- Para términos hebreos (AT): da la palabra en hebreo, transliteración, raíz, significado y uso bíblico.
+- Para términos hebreos (AT): da la palabra en hebreo con vocales (niqqud), transliteración, raíz, significado y uso bíblico.
 - Para términos griegos (NT): da la palabra en griego, transliteración, uso en el NT y la LXX, y la perspectiva adventista.
+- Escribe siempre las palabras originales en caracteres hebreos o griegos, para que la app pueda reproducir su pronunciación.
 - Cita versículos como **Libro Cap:Vers** (RVR60).
-- Indica cuándo una idea proviene del Comentario Bíblico Adventista, del Diccionario o del análisis lingüístico, y no inventes citas textuales ni números de página.
-Modo de idioma: ${langMode}`;
+- Distingue claramente entre lo que proviene de los textos de referencia o de la búsqueda en línea, y lo que es conocimiento general tuyo. Si no puedes verificar una cita del Comentario Bíblico Adventista o del Diccionario, dilo; no inventes citas textuales ni números de página.
+Modo de idioma: ${langMode}${refBlock}`;
 }
 
-function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+/* ───────── Render ───────── */
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+const RE_HE = /[\u0590-\u05FF]+(?:[ \u05BE][\u0590-\u05FF]+)*/g;
+const RE_EL = /[\u0370-\u03FF\u1F00-\u1FFF]+(?: [\u0370-\u03FF\u1F00-\u1FFF]+)*/g;
+
+function addAudioButtons(html) {
+  const wrap = lang => m =>
+    `<span class="bw" dir="${lang === 'he' ? 'rtl' : 'ltr'}">${m}</span>` +
+    `<button class="speak" data-lang="${lang}" data-text="${m}" title="Escuchar pronunciación">🔊</button>`;
+  return html.replace(RE_HE, wrap('he')).replace(RE_EL, wrap('el'));
+}
+
 function md(t) {
-  return esc(t)
+  const html = esc(t)
     .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
     .replace(/\*(.+?)\*/g,'<em>$1</em>')
     .replace(/^#{1,3} (.+)$/gm,'<h3>$1</h3>')
@@ -127,6 +221,7 @@ function md(t) {
     .replace(/^[-•] (.+)$/gm,'<li>$1</li>')
     .replace(/(<li>.*<\/li>\n?)+/g, m => '<ul>' + m + '</ul>')
     .replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+  return addAudioButtons(html);
 }
 
 function add(role, html) {
@@ -138,6 +233,60 @@ function add(role, html) {
   chat.scrollTop = chat.scrollHeight;
 }
 
+/* ───────── Audio (Web Speech API) ───────── */
+let voices = [];
+let slow = true;
+
+function findVoice(prefix) {
+  const m = voices.filter(v => v.lang.replace('_','-').toLowerCase().startsWith(prefix));
+  return m.find(v => v.localService) || m[0] || null;
+}
+function updateVoiceStatus() {
+  voices = window.speechSynthesis ? speechSynthesis.getVoices() : [];
+  const he = findVoice('he'), el = findVoice('el');
+  document.getElementById('voiceStatus').innerHTML =
+    `Hebreo: ${he ? '<span class="ok">✓ ' + esc(he.name) + '</span>' : '<span class="no">✗ sin voz</span>'}<br>` +
+    `Griego: ${el ? '<span class="ok">✓ ' + esc(el.name) + '</span>' : '<span class="no">✗ sin voz</span>'}`;
+  document.getElementById('voiceHelp').textContent = (he && el) ? '' :
+    'Si falta una voz: en Mac, Ajustes del Sistema → Accesibilidad → Contenido hablado → Voz del sistema → Gestionar voces (Carmit para hebreo, Melina para griego). Luego recarga.';
+}
+if ('speechSynthesis' in window) {
+  updateVoiceStatus();
+  speechSynthesis.addEventListener('voiceschanged', updateVoiceStatus);
+} else {
+  document.getElementById('voiceStatus').textContent = 'Tu navegador no soporta audio.';
+}
+function cleanForSpeech(text, lang) {
+  if (lang === 'he') return text.replace(/[\u0591-\u05AF]/g, '').replace(/\u05BE/g, ' ');
+  return text.normalize('NFD').replace(/[\u0300\u0313\u0314\u0342\u0345]/g, '').normalize('NFC');
+}
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => t.style.display = 'none', 6000);
+}
+function speak(text, lang, btn) {
+  if (!('speechSynthesis' in window)) { toast('Tu navegador no soporta audio.'); return; }
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak.playing').forEach(b => b.classList.remove('playing'));
+  const voice = findVoice(lang);
+  if (!voice) { toast(`No hay voz en ${lang === 'he' ? 'hebreo' : 'griego'} instalada. Mira el panel 🔊 Audio.`); return; }
+  const u = new SpeechSynthesisUtterance(cleanForSpeech(text, lang));
+  u.voice = voice; u.lang = voice.lang; u.rate = slow ? 0.7 : 1;
+  btn.classList.add('playing');
+  u.onend = u.onerror = () => btn.classList.remove('playing');
+  speechSynthesis.speak(u);
+}
+chat.addEventListener('click', e => {
+  const b = e.target.closest('.speak');
+  if (b) speak(b.dataset.text, b.dataset.lang, b);
+});
+document.getElementById('slow').onclick = function () {
+  slow = !slow; this.textContent = 'Velocidad: ' + (slow ? 'lenta' : 'normal');
+};
+
+/* ───────── Envío ───────── */
 async function send(text) {
   text = (text || input.value).trim();
   if (!text || busy) return;
@@ -146,20 +295,32 @@ async function send(text) {
   history.push({ role:'user', content:text });
   typing.style.display = 'block';
   chat.scrollTop = chat.scrollHeight;
+
+  const useWeb = document.getElementById('web').checked;
+  const body = { model:MODEL, max_tokens:2000, system:systemPrompt(), messages:history };
+  if (useWeb) body.tools = [{ type:'web_search_20250305', name:'web_search', max_uses:3, allowed_domains:WEB_DOMAINS }];
+
   try {
     const r = await fetch(API_URL, {
       method:'POST',
       headers:{ 'Content-Type':'application/json' },
-      body: JSON.stringify({ model:MODEL, max_tokens:1500, system:systemPrompt(), messages:history })
+      body: JSON.stringify(body)
     });
     const data = await r.json();
     if (!r.ok) throw new Error(data?.error?.message || data?.error || ('Error ' + r.status));
-    const reply = (data.content || []).map(b => b.text || '').join('');
+    const blocks = data.content || [];
+    const reply = blocks.filter(b => b.type === 'text').map(b => b.text || '').join('');
+    const searched = blocks.some(b => b.type === 'web_search_tool_result');
     history.push({ role:'assistant', content:reply });
-    add('bot', md(reply));
+    let badges = '';
+    if (searched) badges += '<br><span class="badge">🌐 CONSULTÓ FUENTES EN LÍNEA</span> ';
+    if (refs.length) badges += '<span class="badge">📎 USÓ TUS REFERENCIAS</span>';
+    add('bot', md(reply) + badges);
   } catch (e) {
     history.pop();
-    add('bot', '⚠ No se pudo obtener la respuesta: ' + esc(String(e.message || e)));
+    let msg = String(e.message || e);
+    if (/web.?search/i.test(msg)) msg += ' — Desactiva "Buscar en fuentes en línea" o habilita la búsqueda web en la consola de Anthropic (Settings → Privacy).';
+    add('bot', '⚠ No se pudo obtener la respuesta: ' + esc(msg));
   }
   typing.style.display = 'none';
   busy = false; sendBtn.disabled = false; input.focus();
