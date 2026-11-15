@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Logos — Consultas Teológicas</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
   :root { --ink:#1a1208; --panel:#14100a; --gold:#c8962a; --gold-l:#e8b84b; --gold-d:#8a6518; --text:#e8d5a3; --muted:#8c7a55; --border:rgba(200,150,42,.3); }
   * { box-sizing:border-box; margin:0; padding:0; }
@@ -13,7 +14,7 @@
   header h1 { font-family:'Cinzel',serif; color:var(--gold-l); letter-spacing:.2em; font-size:1.8rem; }
   header p { font-family:'Cinzel',serif; font-size:.7rem; letter-spacing:.25em; color:var(--gold-d); margin-top:.3rem; text-transform:uppercase; }
   .team { font-size:.8rem; color:var(--muted); margin-top:.4rem; font-style:italic; }
-  main { flex:1; display:grid; grid-template-columns:270px 1fr; min-height:0; }
+  main { flex:1; display:grid; grid-template-columns:290px 1fr; min-height:0; }
   aside { background:var(--panel); border-right:1px solid var(--border); padding:1rem; overflow-y:auto; }
   aside h3 { font-family:'Cinzel',serif; font-size:.7rem; letter-spacing:.2em; color:var(--gold-d); margin:.9rem 0 .5rem; text-transform:uppercase; }
   aside h3:first-child { margin-top:0; }
@@ -24,19 +25,26 @@
   .pill { padding:.25rem .7rem; border:1px solid var(--border); background:none; color:var(--muted); font-family:inherit; font-size:.9rem; cursor:pointer; border-radius:3px; }
   .pill.on { background:var(--gold-d); color:#fff; border-color:var(--gold-d); }
   .voice-status { font-size:.85rem; color:var(--muted); line-height:1.7; }
-  .voice-status .ok { color:#7fae5a; }
+  .voice-status .ok, .vs.ok { color:#7fae5a; }
   .voice-status .no { color:#c45a5a; }
   .web-box { border:1px solid var(--border); border-radius:3px; background:rgba(200,150,42,.05); }
   .upload { display:block; text-align:center; padding:.5rem; border:1px dashed var(--gold-d); border-radius:3px; color:var(--gold); font-size:.9rem; cursor:pointer; }
   .upload:hover { background:rgba(200,150,42,.1); }
-  .upload input { display:none; }
+  .upload input, .mini input { display:none; }
   .ref { display:flex; align-items:center; gap:.4rem; font-size:.8rem; padding:.3rem .5rem; margin-top:.3rem; border:1px solid var(--border); border-radius:3px; background:rgba(61,82,41,.2); }
   .ref span { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .ref button { background:none; border:none; color:var(--muted); cursor:pointer; }
-  .ref button:hover { color:#c45a5a; }
+  .ref button, .vol button { background:none; border:none; color:var(--muted); cursor:pointer; }
+  .ref button:hover, .vol button:hover { color:#c45a5a; }
+  /* Biblioteca CBA */
+  .vol { display:flex; align-items:center; gap:.4rem; padding:.4rem .5rem; margin-top:.3rem; border:1px solid var(--border); border-radius:3px; background:rgba(200,150,42,.04); }
+  .vol .vt { flex:1; font-size:.85rem; min-width:0; }
+  .vol small { color:var(--muted); }
+  .vs { font-size:.75rem; color:var(--muted); }
+  .mini { font-size:.75rem; color:var(--gold); border:1px solid var(--gold-d); border-radius:3px; padding:.15rem .5rem; cursor:pointer; white-space:nowrap; }
+  .mini:hover { background:rgba(200,150,42,.15); }
   section { display:flex; flex-direction:column; min-height:0; }
   #chat { flex:1; overflow-y:auto; padding:1.5rem; display:flex; flex-direction:column; gap:1rem; }
-  .welcome { text-align:center; margin:auto; max-width:520px; }
+  .welcome { text-align:center; margin:auto; max-width:540px; }
   .welcome h2 { font-family:'Cinzel',serif; color:var(--gold-l); margin-bottom:.6rem; }
   .welcome p { color:var(--muted); font-style:italic; line-height:1.6; }
   .quick { display:flex; flex-wrap:wrap; gap:.5rem; justify-content:center; margin-top:1rem; }
@@ -50,6 +58,9 @@
   .msg blockquote { border-left:3px solid var(--gold-d); padding-left:.8rem; margin:.5rem 0; color:var(--muted); font-style:italic; }
   .msg ul { padding-left:1.4rem; }
   .badge { display:inline-block; font-size:.7rem; font-family:'Cinzel',serif; letter-spacing:.08em; color:var(--gold); border:1px solid var(--border); border-radius:2px; padding:0 .4rem; margin-top:.6rem; }
+  details { margin-top:.5rem; font-size:.9rem; }
+  summary { cursor:pointer; color:var(--gold); }
+  .frag { margin-top:.5rem; padding:.5rem .7rem; border-left:3px solid var(--gold-d); background:rgba(0,0,0,.25); color:var(--muted); font-size:.85rem; line-height:1.5; }
   .typing { color:var(--muted); font-style:italic; align-self:flex-start; display:none; }
   .row { display:flex; gap:.6rem; padding:1rem 1.5rem; border-top:1px solid var(--border); }
   textarea { flex:1; background:rgba(245,234,208,.05); border:1px solid var(--border); color:#f5ead0; font-family:inherit; font-size:1.05rem; padding:.7rem; border-radius:3px; resize:none; outline:none; height:52px; }
@@ -61,7 +72,7 @@
   .speak:hover { background:rgba(200,150,42,.15); border-color:var(--gold-l); }
   .speak.playing { background:rgba(200,150,42,.25); color:#fff; }
   #toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%); background:#2a1c0a; border:1px solid var(--gold-d); color:var(--text); padding:.6rem 1rem; border-radius:3px; font-size:.9rem; display:none; max-width:90%; text-align:center; z-index:10; }
-  @media (max-width:760px) { main { grid-template-columns:1fr; grid-template-rows:auto 1fr; } aside { max-height:220px; border-right:none; border-bottom:1px solid var(--border); } }
+  @media (max-width:760px) { main { grid-template-columns:1fr; grid-template-rows:auto 1fr; } aside { max-height:240px; border-right:none; border-bottom:1px solid var(--border); } }
 </style>
 </head>
 <body>
@@ -73,26 +84,28 @@
 
 <main>
   <aside>
+    <h3>📚 Biblioteca CBA · Tomos 1–7</h3>
+    <label class="chk"><input type="checkbox" id="useCba" checked> Usar el CBA en las consultas</label>
+    <div id="cbaList"></div>
+    <div class="note">Carga tu copia digital de cada tomo (PDF con texto, o .txt). Se guarda solo en este navegador; no se sube a ningún servidor.</div>
+
     <h3>Enfoque de las fuentes</h3>
     <label class="chk"><input type="checkbox" checked data-src="La Santa Biblia (Reina-Valera 1960 como referencia principal)"> 📖 La Santa Biblia</label>
     <label class="chk"><input type="checkbox" checked data-src="El Comentario Bíblico Adventista (CBA)"> 📚 Com. Bíblico Adventista</label>
     <label class="chk"><input type="checkbox" checked data-src="El Diccionario Bíblico Adventista"> 📘 Diccionario Adventista</label>
     <label class="chk"><input type="checkbox" checked data-src="Léxicos de Hebreo Bíblico (BDB, HALOT) para el Antiguo Testamento"> א Léxico Hebreo</label>
     <label class="chk"><input type="checkbox" checked data-src="Léxicos de Griego Koiné (BDAG, Thayer) para el Nuevo Testamento"> α Léxico Griego</label>
-    <div class="note">Estas casillas orientan la respuesta. Para consultar textos reales, usa las dos opciones de abajo.</div>
 
-    <h3>Consulta real de fuentes</h3>
+    <h3>Otras fuentes</h3>
     <div class="web-box">
       <label class="chk"><input type="checkbox" id="web"> 🌐 Buscar en fuentes en línea</label>
     </div>
-    <div class="note">Busca en egwwritings.org, adventistas.org y sitios bíblicos antes de responder.</div>
-
+    <div class="note">Busca en egwwritings.org, adventistas.org y sitios bíblicos.</div>
     <div style="margin-top:.7rem">
-      <label class="upload">📎 Agregar textos de referencia (.txt / .md)
+      <label class="upload">📎 Agregar otros textos (.txt / .md)
         <input type="file" id="files" accept=".txt,.md,text/plain,text/markdown" multiple>
       </label>
       <div id="refList"></div>
-      <div class="note">Sube fragmentos del CBA, del Diccionario u otros que tengas. Claude los usará y los citará por nombre.</div>
     </div>
 
     <h3>Modo de idioma</h3>
@@ -115,12 +128,12 @@
     <div id="chat">
       <div class="welcome" id="welcome">
         <h2>Consulta Teológica Adventista</h2>
-        <p>Consulta sobre la Biblia, el Comentario Bíblico Adventista y el Diccionario Adventista. Las palabras en hebreo y griego incluyen un botón 🔊 para escuchar su pronunciación.</p>
+        <p>Carga los tomos del Comentario Bíblico Adventista en el panel lateral y las respuestas citarán el tomo y la página. Las palabras en hebreo y griego incluyen un botón 🔊 para escuchar su pronunciación.</p>
         <div class="quick">
           <button>¿Qué significa שָׁלוֹם (shalom)?</button>
           <button>Explica ἀγάπη (agape) en el NT</button>
-          <button>El concepto de נֶפֶשׁ (nefesh) en el AT</button>
           <button>Doctrina del Santuario en Daniel 8:14</button>
+          <button>Comentario a Apocalipsis 14:6-12</button>
         </div>
       </div>
       <div class="typing" id="typing">✦ Consultando las fuentes…</div>
@@ -139,9 +152,10 @@ const MODEL = 'claude-sonnet-5-5';
 const WEB_DOMAINS = ['egwwritings.org','adventistas.org','adventist.org','biblegateway.com','biblehub.com','blueletterbible.org'];
 const MAX_FILE_CHARS = 20000;
 const MAX_TOTAL_CHARS = 60000;
+if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
 let history = [];
-let refs = [];            // {name, text}
+let refs = [];
 let busy = false;
 let langMode = document.querySelector('.pill.on').dataset.l;
 
@@ -150,7 +164,187 @@ const typing = document.getElementById('typing');
 const input = document.getElementById('q');
 const sendBtn = document.getElementById('send');
 
-/* ───────── Referencias subidas por el usuario ───────── */
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => t.style.display = 'none', 7000);
+}
+
+/* ═══════════════ BIBLIOTECA CBA (Tomos 1-7) ═══════════════ */
+const TOMOS = [null,'Gén – Deut','Jos – Est','Job – Cantares','Isaías – Malaquías','Mateo – Juan','Hechos – Efesios','Filipenses – Apoc.'];
+const BOOKS = [['genesis',1],['exodo',1],['levitico',1],['numeros',1],['deuteronomio',1],
+ ['josue',2],['jueces',2],['rut',2],['1 samuel',2],['2 samuel',2],['1 reyes',2],['2 reyes',2],['1 cronicas',2],['2 cronicas',2],['esdras',2],['nehemias',2],['ester',2],
+ ['job',3],['salmos',3],['salmo',3],['proverbios',3],['eclesiastes',3],['cantares',3],
+ ['isaias',4],['jeremias',4],['lamentaciones',4],['ezequiel',4],['daniel',4],['oseas',4],['joel',4],['amos',4],['abdias',4],['jonas',4],['miqueas',4],['nahum',4],['habacuc',4],['sofonias',4],['hageo',4],['zacarias',4],['malaquias',4],
+ ['mateo',5],['marcos',5],['lucas',5],['juan',5],
+ ['hechos',6],['romanos',6],['1 corintios',6],['2 corintios',6],['galatas',6],['efesios',6],
+ ['filipenses',7],['colosenses',7],['1 tesalonicenses',7],['2 tesalonicenses',7],['1 timoteo',7],['2 timoteo',7],['tito',7],['filemon',7],['hebreos',7],['santiago',7],['1 pedro',7],['2 pedro',7],['1 juan',7],['2 juan',7],['3 juan',7],['judas',7],['apocalipsis',7]
+].sort((a,b) => b[0].length - a[0].length);
+const AMBIG = new Set(['numeros','job','rut','amos','ester','tito','judas','joel','juan','marcos','lucas']);
+const STOP = new Set('que los las del una por con para como sus este esta ese esa son era fue han hay mas muy sin sobre entre cual cuales segun explica significa significado doctrina concepto dime hablame cuando donde quien porque pero tambien desde hasta unos unas ante bajo tras ser nos les comentario biblico adventista'.split(' '));
+
+let library = {};   // tomo -> { name, chunks:[{p,t,n}] }
+let cbaMsg = {};    // tomo -> mensaje de progreso
+
+function norm(s) { return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9:]+/g,' ').trim(); }
+function prep(rec) { return { name: rec.name, chunks: rec.chunks.map(c => ({ p:c.p, t:c.t, n:norm(c.t) })) }; }
+
+/* IndexedDB */
+function openDB() {
+  return new Promise((res, rej) => {
+    const r = indexedDB.open('logos-cba', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('vol', { keyPath:'tomo' });
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
+  });
+}
+async function dbTx(mode, fn) {
+  const db = await openDB();
+  return new Promise((res, rej) => {
+    const tx = db.transaction('vol', mode);
+    const req = fn(tx.objectStore('vol'));
+    tx.oncomplete = () => res(req.result);
+    tx.onerror = () => rej(tx.error);
+  });
+}
+const dbPut = rec => dbTx('readwrite', s => s.put(rec));
+const dbDel = t => dbTx('readwrite', s => s.delete(t));
+const dbAll = () => dbTx('readonly', s => s.getAll());
+
+/* Extracción de texto */
+function splitLong(text, max = 2500) {
+  const out = [];
+  while (text.length > max) {
+    let cut = text.lastIndexOf(' ', max);
+    if (cut < max * 0.6) cut = max;
+    out.push(text.slice(0, cut).trim());
+    text = text.slice(cut).trim();
+  }
+  if (text) out.push(text);
+  return out;
+}
+async function chunksFromPdf(file, onProg) {
+  if (!window.pdfjsLib) throw new Error('No se cargó el lector de PDF. Revisa tu conexión y recarga.');
+  const doc = await pdfjsLib.getDocument({ data: await file.arrayBuffer() }).promise;
+  const out = [];
+  for (let i = 1; i <= doc.numPages; i++) {
+    const page = await doc.getPage(i);
+    const tc = await page.getTextContent();
+    const text = tc.items.map(x => x.str).join(' ').replace(/\s+/g, ' ').trim();
+    if (text.length > 40) splitLong(text).forEach(t => out.push({ p:i, t }));
+    if (i % 10 === 0 || i === doc.numPages) {
+      onProg(i, doc.numPages);
+      await new Promise(r => setTimeout(r));
+    }
+  }
+  return out;
+}
+function chunksFromText(text) {
+  const out = []; let buf = '';
+  for (const para of text.split(/\n\s*\n/)) {
+    const p = para.replace(/\s+/g, ' ').trim();
+    if (!p) continue;
+    if ((buf + ' ' + p).length > 1800 && buf) { splitLong(buf).forEach(t => out.push({ p:null, t })); buf = p; }
+    else buf = buf ? buf + ' ' + p : p;
+  }
+  if (buf) splitLong(buf).forEach(t => out.push({ p:null, t }));
+  return out;
+}
+
+/* Carga de un tomo */
+async function loadVolume(tomo, file) {
+  try {
+    cbaMsg[tomo] = 'Leyendo…'; renderCba();
+    let chunks;
+    if (/\.pdf$/i.test(file.name)) {
+      chunks = await chunksFromPdf(file, (i, n) => { cbaMsg[tomo] = `Procesando pág. ${i}/${n}…`; renderCba(); });
+    } else {
+      chunks = chunksFromText(await file.text());
+    }
+    if (!chunks.length) throw new Error('No se encontró texto. Si es un PDF escaneado (imágenes), necesita pasar por OCR primero.');
+    const rec = { tomo, name:file.name, chunks };
+    await dbPut(rec);
+    library[tomo] = prep(rec);
+    toast(`Tomo ${tomo} cargado: ${chunks.length.toLocaleString('es')} fragmentos.`);
+  } catch (e) {
+    toast(`Error en Tomo ${tomo}: ${e.message || e}`);
+  }
+  cbaMsg[tomo] = '';
+  renderCba();
+}
+
+function renderCba() {
+  const loaded = Object.keys(library).length;
+  document.getElementById('cbaList').innerHTML = [1,2,3,4,5,6,7].map(t => {
+    const v = library[t];
+    const st = cbaMsg[t] || (v ? `✓ ${v.chunks.length.toLocaleString('es')} fragmentos` : 'sin cargar');
+    return `<div class="vol"><div class="vt"><b>Tomo ${t}</b> <small>${TOMOS[t]}</small><div class="vs ${v && !cbaMsg[t] ? 'ok' : ''}">${esc(st)}</div></div>` +
+      `<label class="mini">${v ? 'Cambiar' : 'Cargar'}<input type="file" data-t="${t}" accept=".pdf,.txt,.md"></label>` +
+      (v ? `<button data-del="${t}" title="Quitar">✕</button>` : '') + `</div>`;
+  }).join('') + `<div class="note">Tomos cargados: ${loaded}/7</div>`;
+}
+document.getElementById('cbaList').addEventListener('change', e => {
+  const inp = e.target.closest('input[data-t]');
+  if (inp && inp.files[0]) { const f = inp.files[0]; loadVolume(+inp.dataset.t, f); }
+});
+document.getElementById('cbaList').addEventListener('click', async e => {
+  const b = e.target.closest('button[data-del]');
+  if (!b) return;
+  const t = +b.dataset.del;
+  if (!confirm(`¿Quitar el Tomo ${t} de la biblioteca de este navegador?`)) return;
+  await dbDel(t); delete library[t]; renderCba();
+});
+
+/* Detección de referencia bíblica */
+function detectRef(nq) {
+  for (const [name, tomo] of BOOKS) {
+    const m = new RegExp('(^|[^a-z0-9])' + name + '(?![a-z])(?:\\s+(\\d+)(?::(\\d+))?)?').exec(nq);
+    if (!m) continue;
+    if (AMBIG.has(name) && !m[2]) continue;
+    return { tomo, ch:m[2], v:m[3] };
+  }
+  return null;
+}
+
+/* Búsqueda por relevancia */
+function searchCBA(query, k = 6) {
+  const nq = norm(query);
+  const ref = detectRef(nq);
+  const toks = [...new Set(nq.split(' ').filter(t => t.length > 2 && !STOP.has(t)))];
+  const pool = [];
+  for (const t of Object.keys(library)) for (const c of library[t].chunks) pool.push({ tomo:+t, c });
+  if (!pool.length || !toks.length) return [];
+  const N = pool.length, df = new Array(toks.length).fill(0);
+  const cnt = pool.map(({ c }) => toks.map((t, i) => {
+    let n = 0, pos = 0;
+    while (n < 8 && (pos = c.n.indexOf(t, pos)) !== -1) { n++; pos += t.length; }
+    if (n) df[i]++;
+    return n;
+  }));
+  const idf = df.map(d => Math.log(1 + N / (1 + d)));
+  const scored = [];
+  for (let j = 0; j < N; j++) {
+    let s = 0, matched = 0;
+    for (let i = 0; i < toks.length; i++) {
+      const n = cnt[j][i];
+      if (n) { matched++; s += (1 + Math.log(n)) * idf[i]; }
+    }
+    if (!s) continue;
+    s *= 0.5 + matched / toks.length;
+    const { tomo, c } = pool[j];
+    if (ref && tomo === ref.tomo) {
+      s *= 1.4;
+      if (ref.ch && ref.v && c.n.includes(ref.ch + ':' + ref.v)) s += 6;
+    }
+    scored.push({ tomo, p:c.p, t:c.t, s });
+  }
+  scored.sort((a, b) => b.s - a.s);
+  return scored.slice(0, k);
+}
+
+/* ═══════════════ Otros textos de referencia ═══════════════ */
 function renderRefs() {
   document.getElementById('refList').innerHTML = refs.map((r, i) =>
     `<div class="ref"><span title="${esc(r.name)}">📄 ${esc(r.name)}</span><button data-i="${i}" title="Quitar">✕</button></div>`
@@ -164,26 +358,22 @@ document.getElementById('files').addEventListener('change', async e => {
   for (const f of e.target.files) {
     let text = await f.text();
     const total = refs.reduce((n, r) => n + r.text.length, 0);
-    if (total + Math.min(text.length, MAX_FILE_CHARS) > MAX_TOTAL_CHARS) {
-      toast('Se alcanzó el límite de texto de referencia. Quita algún archivo e intenta de nuevo.');
-      break;
-    }
-    if (text.length > MAX_FILE_CHARS) {
-      text = text.slice(0, MAX_FILE_CHARS);
-      toast(`"${f.name}" era muy largo: se usaron los primeros ${MAX_FILE_CHARS.toLocaleString()} caracteres.`);
-    }
-    refs.push({ name: f.name, text });
+    if (total + Math.min(text.length, MAX_FILE_CHARS) > MAX_TOTAL_CHARS) { toast('Límite de texto alcanzado. Quita algún archivo.'); break; }
+    if (text.length > MAX_FILE_CHARS) { text = text.slice(0, MAX_FILE_CHARS); toast(`"${f.name}": se usaron los primeros ${MAX_FILE_CHARS.toLocaleString('es')} caracteres.`); }
+    refs.push({ name:f.name, text });
   }
-  e.target.value = '';
-  renderRefs();
+  e.target.value = ''; renderRefs();
 });
 
-/* ───────── Prompt ───────── */
-function systemPrompt() {
+/* ═══════════════ Prompt ═══════════════ */
+function systemPrompt(frags) {
   const srcs = [...document.querySelectorAll('[data-src]:checked')].map(c => '- ' + c.dataset.src).join('\n');
   const refBlock = refs.length
-    ? '\n\nTEXTOS DE REFERENCIA APORTADOS POR EL USUARIO (priorízalos y cítalos por nombre de archivo):\n' +
-      refs.map(r => `=== ${r.name} ===\n${r.text}`).join('\n\n')
+    ? '\n\nTEXTOS DE REFERENCIA APORTADOS POR EL USUARIO (priorízalos y cítalos por nombre de archivo):\n' + refs.map(r => `=== ${r.name} ===\n${r.text}`).join('\n\n')
+    : '';
+  const cbaBlock = frags.length
+    ? '\n\nFRAGMENTOS DEL COMENTARIO BÍBLICO ADVENTISTA (recuperados de la biblioteca del usuario). En el apartado de la perspectiva del CBA, básate ÚNICAMENTE en estos fragmentos y cítalos como [CBA Tomo N, p. X]. Si no tratan el tema consultado, dilo claramente en lugar de completar de memoria.\n\n' +
+      frags.map(f => `[CBA Tomo ${f.tomo}, p. ${f.p ?? 's/p'}]\n${f.t.slice(0, 2200)}`).join('\n\n---\n\n')
     : '';
   return `Eres LOGOS, asistente teológico para estudiantes adventistas del séptimo día.
 Enfoque de fuentes:
@@ -194,26 +384,22 @@ Instrucciones:
 - Estructura la respuesta con estos apartados (usa títulos con ##): 1) Introducción breve, 2) Análisis lingüístico (si hay términos originales), 3) Textos bíblicos clave, 4) Perspectiva del Comentario Bíblico Adventista y del Diccionario Adventista, 5) Implicaciones doctrinales y aplicación, 6) Conclusión.
 - Para términos hebreos (AT): presenta la palabra en caracteres hebreos con vocales (niqqud), su transliteración, la raíz verbal (shoresh), la forma morfológica, el significado base y su rango semántico, y al menos 3 pasajes donde aparece con su referencia exacta. Indica cómo la traduce la Septuaginta (LXX) cuando sea relevante.
 - Para términos griegos (NT): presenta la palabra en caracteres griegos, su transliteración, la forma gramatical (caso, tiempo, voz o modo), su etimología, su uso en el NT y en la LXX, al menos 3 pasajes con referencia exacta, y la perspectiva adventista.
-- Compara con otros términos de campo semántico cercano cuando ayude a entender el matiz (por ejemplo, distintos términos para "amor", "alma" o "pecado").
+- Compara con otros términos de campo semántico cercano cuando ayude a entender el matiz.
 - Escribe siempre las palabras originales en caracteres hebreos o griegos, para que la app pueda reproducir su pronunciación.
 - Cita versículos como **Libro Cap:Vers** (RVR60).
-- Distingue claramente entre lo que proviene de los textos de referencia o de la búsqueda en línea, y lo que es conocimiento general tuyo. Si no puedes verificar una cita del Comentario Bíblico Adventista o del Diccionario, dilo; no inventes citas textuales ni números de página.
-Modo de idioma: ${langMode}${refBlock}`;
+- Distingue claramente entre lo que proviene de los textos aportados o de la búsqueda en línea, y lo que es conocimiento general tuyo. Si no puedes verificar una cita del Comentario Bíblico Adventista o del Diccionario, dilo; no inventes citas textuales ni números de página.
+Modo de idioma: ${langMode}${cbaBlock}${refBlock}`;
 }
 
-/* ───────── Render ───────── */
-function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
+/* ═══════════════ Render ═══════════════ */
 const RE_HE = /[\u0590-\u05FF]+(?:[ \u05BE][\u0590-\u05FF]+)*/g;
 const RE_EL = /[\u0370-\u03FF\u1F00-\u1FFF]+(?: [\u0370-\u03FF\u1F00-\u1FFF]+)*/g;
-
 function addAudioButtons(html) {
   const wrap = lang => m =>
     `<span class="bw" dir="${lang === 'he' ? 'rtl' : 'ltr'}">${m}</span>` +
     `<button class="speak" data-lang="${lang}" data-text="${m}" title="Escuchar pronunciación">🔊</button>`;
   return html.replace(RE_HE, wrap('he')).replace(RE_EL, wrap('el'));
 }
-
 function md(t) {
   const html = esc(t)
     .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
@@ -225,7 +411,6 @@ function md(t) {
     .replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
   return addAudioButtons(html);
 }
-
 function add(role, html) {
   document.getElementById('welcome')?.remove();
   const d = document.createElement('div');
@@ -235,10 +420,9 @@ function add(role, html) {
   chat.scrollTop = chat.scrollHeight;
 }
 
-/* ───────── Audio (Web Speech API) ───────── */
+/* ═══════════════ Audio ═══════════════ */
 let voices = [];
 let slow = true;
-
 function findVoice(prefix) {
   const m = voices.filter(v => v.lang.replace('_','-').toLowerCase().startsWith(prefix));
   return m.find(v => v.localService) || m[0] || null;
@@ -262,12 +446,6 @@ function cleanForSpeech(text, lang) {
   if (lang === 'he') return text.replace(/[\u0591-\u05AF]/g, '').replace(/\u05BE/g, ' ');
   return text.normalize('NFD').replace(/[\u0300\u0313\u0314\u0342\u0345]/g, '').normalize('NFC');
 }
-function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.style.display = 'block';
-  clearTimeout(toast.timer);
-  toast.timer = setTimeout(() => t.style.display = 'none', 6000);
-}
 function speak(text, lang, btn) {
   if (!('speechSynthesis' in window)) { toast('Tu navegador no soporta audio.'); return; }
   speechSynthesis.cancel();
@@ -288,7 +466,7 @@ document.getElementById('slow').onclick = function () {
   slow = !slow; this.textContent = 'Velocidad: ' + (slow ? 'lenta' : 'normal');
 };
 
-/* ───────── Envío ───────── */
+/* ═══════════════ Envío ═══════════════ */
 async function send(text) {
   text = (text || input.value).trim();
   if (!text || busy) return;
@@ -298,31 +476,43 @@ async function send(text) {
   typing.style.display = 'block';
   chat.scrollTop = chat.scrollHeight;
 
+  const cbaOn = document.getElementById('useCba').checked && Object.keys(library).length > 0;
+  let frags = [];
+  if (cbaOn) {
+    await new Promise(r => setTimeout(r, 20));
+    frags = searchCBA(text);
+  }
+
   const useWeb = document.getElementById('web').checked;
-  const body = { model:MODEL, max_tokens:4000, system:systemPrompt(), messages:history };
+  const body = { model:MODEL, max_tokens:4000, system:systemPrompt(frags), messages:history };
   if (useWeb) body.tools = [{ type:'web_search_20250305', name:'web_search', max_uses:3, allowed_domains:WEB_DOMAINS }];
 
   try {
-    const r = await fetch(API_URL, {
-      method:'POST',
-      headers:{ 'Content-Type':'application/json' },
-      body: JSON.stringify(body)
-    });
+    const r = await fetch(API_URL, { method:'POST', headers:{ 'Content-Type':'application/json' }, body:JSON.stringify(body) });
     const data = await r.json();
     if (!r.ok) throw new Error(data?.error?.message || data?.error || ('Error ' + r.status));
     const blocks = data.content || [];
     const reply = blocks.filter(b => b.type === 'text').map(b => b.text || '').join('');
     const searched = blocks.some(b => b.type === 'web_search_tool_result');
     history.push({ role:'assistant', content:reply });
-    let badges = '';
-    if (searched) badges += '<br><span class="badge">🌐 CONSULTÓ FUENTES EN LÍNEA</span> ';
-    if (refs.length) badges += '<span class="badge">📎 USÓ TUS REFERENCIAS</span>';
-    if (data.stop_reason === 'max_tokens') badges += '<br><span class="badge">⚠ RESPUESTA CORTADA · escribe "continúa"</span>';
-    add('bot', md(reply) + badges);
+
+    let extra = '';
+    if (frags.length) {
+      const srcs = [...new Set(frags.map(f => `T${f.tomo}${f.p ? ' p.' + f.p : ''}`))].join(' · ');
+      extra += `<br><span class="badge">📚 CBA: ${esc(srcs)}</span>` +
+        `<details><summary>Ver fragmentos del CBA usados</summary>` +
+        frags.map(f => `<div class="frag"><b>Tomo ${f.tomo}${f.p ? ', p. ' + f.p : ''}</b><br>${esc(f.t.slice(0, 700))}…</div>`).join('') + `</details>`;
+    } else if (cbaOn) {
+      extra += '<br><span class="badge">📚 CBA: SIN FRAGMENTOS RELEVANTES</span>';
+    }
+    if (searched) extra += '<br><span class="badge">🌐 CONSULTÓ FUENTES EN LÍNEA</span>';
+    if (refs.length) extra += ' <span class="badge">📎 USÓ TUS TEXTOS</span>';
+    if (data.stop_reason === 'max_tokens') extra += '<br><span class="badge">⚠ RESPUESTA CORTADA · escribe "continúa"</span>';
+    add('bot', md(reply) + extra);
   } catch (e) {
     history.pop();
     let msg = String(e.message || e);
-    if (/web.?search/i.test(msg)) msg += ' — Desactiva "Buscar en fuentes en línea" o habilita la búsqueda web en la consola de Anthropic (Settings → Privacy).';
+    if (/web.?search/i.test(msg)) msg += ' — Desactiva "Buscar en fuentes en línea" o habilita la búsqueda web en la consola de Anthropic.';
     add('bot', '⚠ No se pudo obtener la respuesta: ' + esc(msg));
   }
   typing.style.display = 'none';
@@ -336,6 +526,17 @@ document.querySelectorAll('#langs .pill').forEach(p => p.onclick = () => {
   document.querySelectorAll('#langs .pill').forEach(x => x.classList.remove('on'));
   p.classList.add('on'); langMode = p.dataset.l;
 });
+
+/* ═══════════════ Inicio ═══════════════ */
+(async function init() {
+  renderCba();
+  try {
+    navigator.storage?.persist?.();
+    const recs = await dbAll();
+    for (const r of recs) library[r.tomo] = prep(r);
+  } catch (e) { toast('No se pudo leer la biblioteca guardada: ' + (e.message || e)); }
+  renderCba();
+})();
 </script>
 </body>
 </html>
