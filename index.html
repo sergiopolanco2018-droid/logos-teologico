@@ -188,14 +188,19 @@ const STOP = new Set('que los las del una por con para como sus este esta ese es
 let library = {};   // tomo -> { name, chunks:[{p,t,n}] }
 let cbaMsg = {};    // tomo -> mensaje de progreso
 
-function norm(s) { return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9:]+/g,' ').trim(); }
+function norm(s) { return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f\u0591-\u05C7]/g,'').replace(/[^a-z0-9:\u05D0-\u05EA\u03B1-\u03C9]+/g,' ').trim(); }
 function prep(rec) { return { name: rec.name, chunks: rec.chunks.map(c => ({ p:c.p, t:c.t, n:norm(c.t) })) }; }
 
 /* IndexedDB */
 function openDB() {
   return new Promise((res, rej) => {
-    const r = indexedDB.open('logos-cba', 1);
-    r.onupgradeneeded = () => r.result.createObjectStore('vol', { keyPath:'tomo' });
+    const r = indexedDB.open('logos-cba', 2);
+    r.onupgradeneeded = () => {
+      const d = r.result;
+      if (!d.objectStoreNames.contains('vol')) d.createObjectStore('vol', { keyPath:'tomo' });
+      if (!d.objectStoreNames.contains('media')) d.createObjectStore('media', { keyPath:'id' });
+      if (!d.objectStoreNames.contains('mblob')) d.createObjectStore('mblob', { keyPath:'id' });
+    };
     r.onsuccess = () => res(r.result);
     r.onerror = () => rej(r.error);
   });
@@ -275,16 +280,91 @@ async function loadVolume(tomo, file) {
   renderCba();
 }
 
+const EXTRA = {
+  8:  { n:'Diccionario Adventista', s:'Entradas A–Z',           b:'Dicc.'   },
+  10: { n:'Léxico Hebreo',          s:'Strong / BDB / otro',    b:'Hebreo'  },
+  11: { n:'Léxico Griego',          s:'Strong / Thayer / otro', b:'Griego'  }
+};
+const BIBLE_LIST = [9, 12, 13, 14, 15, 16, 17];   // 7 versiones de la Biblia
+const BIBLE = new Set(BIBLE_LIST);
+BIBLE_LIST.forEach(t => EXTRA[t] = { n:'Biblia', s:'Versión de la Biblia', b:'Biblia' });
+const vnames = (() => { try { return JSON.parse(localStorage.getItem('logos-vnames') || '{}'); } catch (e) { return {}; } })();
+const saveVnames = () => { try { localStorage.setItem('logos-vnames', JSON.stringify(vnames)); } catch (e) {} };
+const bibleLabel = t => 'Biblia ' + (vnames[t] || (library[t] ? library[t].name.replace(/\.[^.]+$/, '') : 'versión'));
+let research = (() => { try { return JSON.parse(localStorage.getItem('logos-research') || '[]'); } catch (e) { return []; } })();
+const saveResearch = () => { try { localStorage.setItem('logos-research', JSON.stringify(research)); } catch (e) {} };
+const resLabel = t => {
+  const r = research.find(x => x.id === t);
+  return r ? `${r.cat}: ${r.title}` : (library[t] ? 'Investigación: ' + library[t].name.replace(/\.[^.]+$/, '') : 'Investigación');
+};
+const volName = t => t >= 100 ? resLabel(t) : BIBLE.has(t) ? bibleLabel(t) : (EXTRA[t] ? EXTRA[t].n : 'CBA Tomo ' + t);
+const baseOrder = [1,2,3,4,5,6,7,8, ...BIBLE_LIST, 10, 11];
+const customIds = () => [...new Set([...research.map(r => r.id), ...Object.keys(library).map(Number).filter(t => t >= 100)])].sort((a, b) => a - b);
 function renderCba() {
   const loaded = Object.keys(library).length;
-  document.getElementById('cbaList').innerHTML = [1,2,3,4,5,6,7].map(t => {
+  document.querySelector('aside h3').textContent = '📚 Biblioteca de fuentes';
+  document.getElementById('useCba').nextSibling.textContent = ' Usar la biblioteca en las consultas';
+  const row = t => {
     const v = library[t];
+    const custom = t >= 100;
     const st = cbaMsg[t] || (v ? `✓ ${v.chunks.length.toLocaleString('es')} fragmentos` : 'sin cargar');
-    return `<div class="vol"><div class="vt"><b>Tomo ${t}</b> <small>${TOMOS[t]}</small><div class="vs ${v && !cbaMsg[t] ? 'ok' : ''}">${esc(st)}</div></div>` +
-      `<label class="mini">${v ? 'Cambiar' : 'Cargar'}<input type="file" data-t="${t}" accept=".pdf,.txt,.md"></label>` +
-      (v ? `<button data-del="${t}" title="Quitar">✕</button>` : '') + `</div>`;
-  }).join('') + `<div class="note">Tomos cargados: ${loaded}/7</div>`;
+    const title = custom ? resLabel(t) : BIBLE.has(t) ? (v ? bibleLabel(t) : 'Biblia · versión ' + (BIBLE_LIST.indexOf(t) + 1)) : (EXTRA[t] ? EXTRA[t].n : 'CBA · Tomo ' + t);
+    const sub = custom ? 'Investigación' : BIBLE.has(t) ? 'Versión de la Biblia' : (EXTRA[t] ? EXTRA[t].s : TOMOS[t]);
+    return `<div class="vol"><div class="vt"><b>${esc(title)}</b> <small>${sub}</small><div class="vs ${v && !cbaMsg[t] ? 'ok' : ''}">${esc(st)}</div></div>` +
+      `<label class="mini">${v ? 'Cambiar' : 'Cargar'}<input type="file" data-t="${t}" accept=".pdf,.txt,.md,.json,.xml"></label>` +
+      (BIBLE.has(t) && v ? `<button data-ren="${t}" title="Poner nombre a la versión">✎</button>` : '') +
+      (custom ? `<button data-rnr="${t}" title="Editar categoría y título">✎</button><button data-rmres="${t}" title="Eliminar esta investigación">🗑</button>` : '') +
+      (!custom && v ? `<button data-del="${t}" title="Quitar">✕</button>` : '') + `</div>`;
+  };
+  document.getElementById('cbaList').innerHTML = baseOrder.map(row).join('') +
+    `<h3 style="margin-top:.9rem">🔬 Investigaciones</h3>` + customIds().map(row).join('') +
+    `<button class="pill" data-addres="1" style="margin-top:.5rem;width:100%">➕ Agregar investigación</button>` +
+    `<div class="note">Fuentes cargadas: ${loaded}. Crea una investigación por tema (arqueología, geología, historia, astronomía…) y carga sus documentos.</div>`;
 }
+document.getElementById('cbaList').addEventListener('click', async e => {
+  const ren = e.target.closest('button[data-ren]');
+  if (ren) {
+    const t = +ren.dataset.ren;
+    const n = prompt('Nombre de esta versión de la Biblia (ej. RVR60, NVI, LBLA):', vnames[t] || '');
+    if (n === null) return;
+    if (n.trim()) vnames[t] = n.trim(); else delete vnames[t];
+    saveVnames(); renderCba();
+    return;
+  }
+  if (e.target.closest('button[data-addres]')) {
+    const cat = prompt('Categoría de la investigación (ej. Arqueología, Geología, Historia, Astronomía):', 'Arqueología');
+    if (!cat || !cat.trim()) return;
+    const title = prompt('Tema o título (ej. Excavaciones de Jericó, Estratigrafía del Gran Cañón):', '');
+    if (title === null) return;
+    const id = Math.max(99, ...research.map(r => r.id), ...Object.keys(library).map(Number)) + 1;
+    research.push({ id, cat:cat.trim(), title:title.trim() || 'Sin título' });
+    saveResearch(); renderCba();
+    toast('Investigación creada. Presiona "Cargar" en su fila para subir los documentos.');
+    return;
+  }
+  const rn = e.target.closest('button[data-rnr]');
+  if (rn) {
+    const t = +rn.dataset.rnr;
+    let r = research.find(x => x.id === t);
+    if (!r) { r = { id:t, cat:'Investigación', title:'' }; research.push(r); }
+    const cat = prompt('Categoría:', r.cat);
+    if (cat === null) return;
+    const title = prompt('Tema o título:', r.title);
+    if (title === null) return;
+    r.cat = cat.trim() || r.cat; r.title = title.trim() || r.title;
+    saveResearch(); renderCba();
+    return;
+  }
+  const rm = e.target.closest('button[data-rmres]');
+  if (rm) {
+    const t = +rm.dataset.rmres;
+    if (!confirm('¿Eliminar esta investigación y sus documentos de este navegador?')) return;
+    try { await dbDel(t); } catch (err) {}
+    delete library[t];
+    research = research.filter(x => x.id !== t);
+    saveResearch(); renderCba();
+  }
+});
 document.getElementById('cbaList').addEventListener('change', e => {
   const inp = e.target.closest('input[data-t]');
   if (inp && inp.files[0]) { const f = inp.files[0]; loadVolume(+inp.dataset.t, f); }
@@ -341,8 +421,217 @@ function searchCBA(query, k = 6) {
     scored.push({ tomo, p:c.p, t:c.t, s });
   }
   scored.sort((a, b) => b.s - a.s);
-  return scored.slice(0, k);
+  const top = scored.length ? scored[0].s : 0;
+  const best = {};
+  scored.forEach(x => { if (x.tomo > 7 && x.s >= 0.3 * top && !best[x.tomo]) best[x.tomo] = x; });
+  const extras = Object.values(best).sort((a, b) => b.s - a.s).slice(0, 12);
+  const others = scored.filter(x => x.tomo <= 7).slice(0, 5);
+  return [...others, ...extras];
 }
+
+/* ═══════════════ Otros textos de referencia ═══════════════ */
+/* ═══════════════ MULTIMEDIA: imágenes, videos y enlaces ═══════════════ */
+let lastCat = 'Arqueología';
+let attachment = null;   // imagen adjunta a la próxima pregunta (para que Claude la analice)
+
+(function () {
+  const s = document.createElement('style');
+  s.textContent = `
+    .gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:.7rem; margin-top:.8rem; }
+    .gallery figure { border:1px solid var(--border); border-radius:3px; overflow:hidden; background:rgba(0,0,0,.3); }
+    .gallery img, .gallery video, .gallery iframe { width:100%; display:block; aspect-ratio:16/10; object-fit:cover; border:0; }
+    .gallery img { cursor:zoom-in; }
+    .gallery a { display:block; padding:1rem; color:var(--gold); }
+    .cap { padding:.4rem .6rem; font-size:.8rem; color:var(--muted); line-height:1.4; }
+    #zoom { position:fixed; inset:0; background:rgba(0,0,0,.92); display:flex; align-items:center; justify-content:center; z-index:50; cursor:zoom-out; }
+    #zoom img { max-width:94vw; max-height:94vh; }
+    #attChip { display:none; margin:0 1.5rem .4rem; padding:.3rem .6rem; border:1px solid var(--border); border-radius:3px; font-size:.85rem; color:var(--gold); background:rgba(200,150,42,.06); }
+    #attChip button { background:none; border:none; color:var(--muted); cursor:pointer; margin-left:.4rem; }`;
+  document.head.appendChild(s);
+})();
+
+function mdb(store, mode, fn) {
+  return openDB().then(db => new Promise((res, rej) => {
+    const tx = db.transaction(store, mode);
+    const req = fn(tx.objectStore(store));
+    tx.oncomplete = () => res(req ? req.result : undefined);
+    tx.onerror = () => rej(tx.error);
+  }));
+}
+const mediaMeta = () => mdb('media', 'readonly', s => s.getAll());
+const mediaGetBlob = id => mdb('mblob', 'readonly', s => s.get(id));
+async function mediaSave(meta, blob) {
+  await mdb('media', 'readwrite', s => s.put(meta));
+  if (blob) await mdb('mblob', 'readwrite', s => s.put({ id:meta.id, blob }));
+}
+async function mediaDelete(id) {
+  await mdb('media', 'readwrite', s => s.delete(id));
+  await mdb('mblob', 'readwrite', s => s.delete(id));
+}
+const newMediaId = () => 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+const youtubeId = url => { const m = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/.exec(url || ''); return m ? m[1] : null; };
+
+/* Sección en el panel lateral (se crea desde JavaScript) */
+(function () {
+  const sec = document.createElement('div');
+  sec.innerHTML = `<h3>🖼️ Multimedia de investigación</h3>
+    <label class="chk"><input type="checkbox" id="useMedia" checked> Mostrar multimedia relacionada</label>
+    <div class="pills" style="margin:.4rem 0">
+      <label class="mini">➕ Imágenes / videos<input type="file" id="mediaFiles" accept="image/*,video/*" multiple></label>
+      <button class="pill" id="addLink">🔗 Enlace de video</button>
+    </div>
+    <div id="mediaList"></div>
+    <div class="note">Se guardan solo en este navegador. Al consultar, se muestran las que coincidan con el título, la categoría o la descripción.</div>`;
+  const anchor = [...document.querySelectorAll('aside h3')].find(h => h.textContent.includes('Modo de idioma'));
+  anchor.parentNode.insertBefore(sec, anchor);
+})();
+
+async function renderMedia() {
+  let items = [];
+  try { items = await mediaMeta(); } catch (e) {}
+  items.sort((a, b) => a.cat.localeCompare(b.cat));
+  document.getElementById('mediaList').innerHTML = items.map(m =>
+    `<div class="vol"><div class="vt"><b>${m.kind === 'image' ? '🖼️' : m.kind === 'video' ? '🎞️' : '🔗'} ${esc(m.title)}</b><div class="vs">${esc(m.cat)}</div></div>` +
+    `<button data-medit="${m.id}" title="Editar">✎</button><button data-mdel="${m.id}" title="Eliminar">🗑</button></div>`
+  ).join('') || '<div class="note">Aún no hay multimedia.</div>';
+}
+
+document.getElementById('mediaFiles').addEventListener('change', async e => {
+  const files = [...e.target.files]; e.target.value = '';
+  if (!files.length) return;
+  const cat = prompt('Categoría o tema (ej. Arqueología: Jericó):', lastCat);
+  if (cat === null) return;
+  const desc = prompt('Descripción o palabras clave (ayudan a encontrar estos archivos al consultar):', '');
+  if (desc === null) return;
+  lastCat = cat.trim() || lastCat;
+  let n = 0;
+  for (const f of files) {
+    const kind = f.type.startsWith('video') ? 'video' : f.type.startsWith('image') ? 'image' : null;
+    if (!kind) { toast(`"${f.name}" no es imagen ni video.`); continue; }
+    if (f.size > 500 * 1024 * 1024) { toast(`"${f.name}" supera 500 MB.`); continue; }
+    const meta = { id:newMediaId(), kind, title:f.name.replace(/\.[^.]+$/, ''), cat:lastCat, desc:desc.trim(), name:f.name, type:f.type };
+    meta.n = norm([meta.title, meta.cat, meta.desc].join(' '));
+    try { await mediaSave(meta, f); n++; } catch (err) { toast('No se pudo guardar: ' + (err.message || err)); }
+  }
+  if (n) toast(`${n} archivo(s) agregado(s). Usa ✎ para ajustar título y descripción.`);
+  renderMedia();
+});
+
+document.getElementById('addLink').addEventListener('click', async () => {
+  const url = (prompt('Pega el enlace del video (YouTube u otro sitio):') || '').trim();
+  if (!/^https?:\/\//i.test(url)) { if (url) toast('El enlace debe empezar con http:// o https://'); return; }
+  const title = prompt('Título del video:', '');
+  if (title === null) return;
+  const cat = prompt('Categoría o tema:', lastCat);
+  if (cat === null) return;
+  const desc = prompt('Descripción o palabras clave:', '');
+  if (desc === null) return;
+  lastCat = cat.trim() || lastCat;
+  const meta = { id:newMediaId(), kind:'link', url, title:title.trim() || 'Video', cat:lastCat, desc:desc.trim() };
+  meta.n = norm([meta.title, meta.cat, meta.desc].join(' '));
+  await mediaSave(meta);
+  renderMedia();
+});
+
+document.getElementById('mediaList').addEventListener('click', async e => {
+  const ed = e.target.closest('button[data-medit]');
+  const dl = e.target.closest('button[data-mdel]');
+  if (ed) {
+    const m = (await mediaMeta()).find(x => x.id === ed.dataset.medit);
+    if (!m) return;
+    const title = prompt('Título:', m.title); if (title === null) return;
+    const cat = prompt('Categoría o tema:', m.cat); if (cat === null) return;
+    const desc = prompt('Descripción o palabras clave:', m.desc || ''); if (desc === null) return;
+    m.title = title.trim() || m.title; m.cat = cat.trim() || m.cat; m.desc = desc.trim();
+    m.n = norm([m.title, m.cat, m.desc].join(' '));
+    await mediaSave(m); renderMedia();
+  } else if (dl && confirm('¿Eliminar este archivo de la biblioteca?')) {
+    await mediaDelete(dl.dataset.mdel); renderMedia();
+  }
+});
+
+/* Galería que se muestra bajo la respuesta */
+async function mediaHtml(query) {
+  try {
+    if (!document.getElementById('useMedia').checked) return '';
+    const toks = [...new Set(norm(query).split(' ').filter(t => t.length > 2 && !STOP.has(t)))];
+    if (!toks.length) return '';
+    const items = await mediaMeta();
+    const top = items.map(m => ({ m, s:toks.filter(t => m.n.includes(t)).length }))
+      .filter(x => x.s > 0).sort((a, b) => b.s - a.s).slice(0, 4);
+    if (!top.length) return '';
+    let html = '<div class="gallery">';
+    for (const { m } of top) {
+      const cap = `<div class="cap"><b>${esc(m.title)}</b><br>${esc(m.cat)}${m.desc ? ' · ' + esc(m.desc.slice(0, 160)) : ''}</div>`;
+      if (m.kind === 'link') {
+        const id = youtubeId(m.url);
+        html += `<figure>${id ? `<iframe src="https://www.youtube.com/embed/${id}" allowfullscreen loading="lazy"></iframe>` : `<a href="${esc(m.url)}" target="_blank" rel="noopener">🔗 Abrir video</a>`}${cap}</figure>`;
+      } else {
+        const rec = await mediaGetBlob(m.id);
+        if (!rec) continue;
+        const url = URL.createObjectURL(rec.blob);
+        html += `<figure>${m.kind === 'image' ? `<img src="${url}" data-zoom="1" alt="${esc(m.title)}">` : `<video src="${url}" controls preload="metadata"></video>`}${cap}</figure>`;
+      }
+    }
+    return html + '</div>';
+  } catch (e) { return ''; }
+}
+
+chat.addEventListener('click', e => {
+  const im = e.target.closest('img[data-zoom]');
+  if (!im) return;
+  const ov = document.createElement('div');
+  ov.id = 'zoom';
+  ov.innerHTML = `<img src="${im.src}" alt="">`;
+  ov.onclick = () => ov.remove();
+  document.body.appendChild(ov);
+});
+
+/* Adjuntar una imagen a la pregunta (Claude la analiza) */
+function imgToJpeg(file, max = 1280) {
+  return new Promise((res, rej) => {
+    const img = new Image(), url = URL.createObjectURL(file);
+    img.onload = () => {
+      const k = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      res(c.toDataURL('image/jpeg', 0.85).split(',')[1]);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); rej(new Error('No se pudo leer la imagen (formato no compatible).')); };
+    img.src = url;
+  });
+}
+const attChip = document.createElement('div');
+attChip.id = 'attChip';
+document.querySelector('.row').before(attChip);
+function updateChip() {
+  attChip.style.display = attachment ? 'block' : 'none';
+  attChip.innerHTML = attachment ? `📷 ${esc(attachment.name)} <button title="Quitar">✕</button>` : '';
+}
+attChip.addEventListener('click', e => { if (e.target.closest('button')) { attachment = null; updateChip(); } });
+function takeAttachment() { const a = attachment; attachment = null; updateChip(); return a; }
+
+const attBtn = document.createElement('button');
+attBtn.textContent = '📷';
+attBtn.title = 'Adjuntar una imagen para que Claude la analice';
+attBtn.style.cssText = 'width:52px;border:1px solid var(--border);background:rgba(200,150,42,.08);color:var(--gold);font-size:1.2rem;cursor:pointer;border-radius:3px';
+const attInput = document.createElement('input');
+attInput.type = 'file'; attInput.accept = 'image/*'; attInput.hidden = true;
+attBtn.onclick = () => attInput.click();
+attInput.addEventListener('change', async () => {
+  const f = attInput.files[0]; attInput.value = '';
+  if (!f) return;
+  try {
+    attachment = { type:'image/jpeg', data:await imgToJpeg(f), name:f.name };
+    updateChip();
+    if (!input.value.trim()) input.value = 'Analiza esta imagen en el contexto de la investigación: ';
+    input.focus();
+  } catch (e) { toast(e.message || String(e)); }
+});
+document.querySelector('.row').insertBefore(attBtn, sendBtn);
+renderMedia();
 
 /* ═══════════════ Otros textos de referencia ═══════════════ */
 function renderRefs() {
@@ -373,7 +662,7 @@ function systemPrompt(frags) {
     : '';
   const cbaBlock = frags.length
     ? '\n\nFRAGMENTOS DEL COMENTARIO BÍBLICO ADVENTISTA (recuperados de la biblioteca del usuario). En el apartado de la perspectiva del CBA, básate ÚNICAMENTE en estos fragmentos y cítalos como [CBA Tomo N, p. X]. Si no tratan el tema consultado, dilo claramente en lugar de completar de memoria.\n\n' +
-      frags.map(f => `[CBA Tomo ${f.tomo}, p. ${f.p ?? 's/p'}]\n${f.t.slice(0, 2200)}`).join('\n\n---\n\n')
+      frags.map(f => `[${volName(f.tomo)}, p. ${f.p ?? 's/p'}]\n${f.t.slice(0, 2200)}`).join('\n\n---\n\n')
     : '';
   return `Eres LOGOS, asistente teológico para estudiantes adventistas del séptimo día.
 Enfoque de fuentes:
@@ -386,7 +675,8 @@ Instrucciones:
 - Para términos griegos (NT): presenta la palabra en caracteres griegos, su transliteración, la forma gramatical (caso, tiempo, voz o modo), su etimología, su uso en el NT y en la LXX, al menos 3 pasajes con referencia exacta, y la perspectiva adventista.
 - Compara con otros términos de campo semántico cercano cuando ayude a entender el matiz.
 - Escribe siempre las palabras originales en caracteres hebreos o griegos, para que la app pueda reproducir su pronunciación.
-- Cita versículos como **Libro Cap:Vers** (RVR60).
+- Cita versículos como **Libro Cap:Vers** (RVR60). Si los fragmentos incluyen varias versiones de la Biblia, preséntalas en una comparación breve indicando el nombre de cada versión y señala las diferencias de redacción relevantes.
+- Los fragmentos de investigaciones aportadas por el usuario (arqueología, geología, historia, etc.) cítalos con el título indicado en su etiqueta; distingue los datos observados de las interpretaciones, señala cuando una conclusión es debatida o depende de supuestos, y relaciónalos con el texto bíblico solo cuando corresponda, sin forzar conclusiones.
 - Distingue claramente entre lo que proviene de los textos aportados o de la búsqueda en línea, y lo que es conocimiento general tuyo. Si no puedes verificar una cita del Comentario Bíblico Adventista o del Diccionario, dilo; no inventes citas textuales ni números de página.
 Modo de idioma: ${langMode}${cbaBlock}${refBlock}`;
 }
@@ -471,8 +761,15 @@ async function send(text) {
   text = (text || input.value).trim();
   if (!text || busy) return;
   busy = true; sendBtn.disabled = true; input.value = '';
-  add('user', esc(text));
-  history.push({ role:'user', content:text });
+  const att = takeAttachment();
+  history.forEach(m => {
+    if (Array.isArray(m.content)) m.content = m.content.filter(b => b.type === 'text').map(b => b.text).join('\n') + '\n[Imagen adjuntada anteriormente]';
+  });
+  add('user', esc(text) + (att ? `<br><img src="data:${att.type};base64,${att.data}" alt="" style="max-width:220px;border-radius:3px;margin-top:.5rem">` : ''));
+  history.push({ role:'user', content: att
+    ? [{ type:'image', source:{ type:'base64', media_type:att.type, data:att.data } },
+       { type:'text', text: text + '\n\n(Hay una imagen adjunta: descríbela con precisión, separa lo que se observa de lo que se interpreta, y no afirmes fechas, identificaciones ni autenticidad sin sustento; indica tu grado de certeza.)' }]
+    : text });
   typing.style.display = 'block';
   chat.scrollTop = chat.scrollHeight;
 
@@ -498,17 +795,17 @@ async function send(text) {
 
     let extra = '';
     if (frags.length) {
-      const srcs = [...new Set(frags.map(f => `T${f.tomo}${f.p ? ' p.' + f.p : ''}`))].join(' · ');
-      extra += `<br><span class="badge">📚 CBA: ${esc(srcs)}</span>` +
-        `<details><summary>Ver fragmentos del CBA usados</summary>` +
-        frags.map(f => `<div class="frag"><b>Tomo ${f.tomo}${f.p ? ', p. ' + f.p : ''}</b><br>${esc(f.t.slice(0, 700))}…</div>`).join('') + `</details>`;
+      const srcs = [...new Set(frags.map(f => `${f.tomo > 7 ? volName(f.tomo) : 'T' + f.tomo}${f.p ? ' p.' + f.p : ''}`))].join(' · ');
+      extra += `<br><span class="badge">📚 BIBLIOTECA: ${esc(srcs)}</span>` +
+        `<details><summary>Ver fragmentos usados</summary>` +
+        frags.map(f => `<div class="frag"><b>${esc(f.tomo > 7 ? volName(f.tomo) : 'CBA · Tomo ' + f.tomo)}${f.p ? ', p. ' + f.p : ''}</b><br>${esc(f.t.slice(0, 700))}…</div>`).join('') + `</details>`;
     } else if (cbaOn) {
       extra += '<br><span class="badge">📚 CBA: SIN FRAGMENTOS RELEVANTES</span>';
     }
     if (searched) extra += '<br><span class="badge">🌐 CONSULTÓ FUENTES EN LÍNEA</span>';
     if (refs.length) extra += ' <span class="badge">📎 USÓ TUS TEXTOS</span>';
     if (data.stop_reason === 'max_tokens') extra += '<br><span class="badge">⚠ RESPUESTA CORTADA · escribe "continúa"</span>';
-    add('bot', md(reply) + extra);
+    add('bot', md(reply) + extra + await mediaHtml(text));
   } catch (e) {
     history.pop();
     let msg = String(e.message || e);
